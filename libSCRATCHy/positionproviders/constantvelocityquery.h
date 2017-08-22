@@ -1,7 +1,7 @@
 #ifndef CONSTANTVELOCITYQUERY_H
 #define CONSTANTVELOCITYQUERY_H
 
-#include "positionquery.h"
+#include "highlevel/positionquery.h"
 
 class ConstantVelocityQuery : public PositionQuery
 {

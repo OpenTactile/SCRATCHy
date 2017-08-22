@@ -57,7 +57,8 @@ HEADERS +=\
     positionproviders/constantvelocityquery.h \
     positionproviders/mousepositionquery.h \    
     lowlevel/iowrap.h \
-    scratchy.h
+    scratchy.h \
+    highlevel/positionquery.h
 
 
 LIBS += -lusb -latomic

@@ -1,7 +1,7 @@
 #ifndef MOUSEPOSITIONQUERY_H
 #define MOUSEPOSITIONQUERY_H
 
-#include "positionquery.h"
+#include "highlevel/positionquery.h"
 
 class MousePositionQuery : public PositionQuery
 {
