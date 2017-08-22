@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/bug.png</file>
+        <file>images/check.png</file>
+        <file>images/clock.png</file>
+        <file>images/cog.png</file>
+        <file>images/fire.png</file>
+        <file>images/forbidden.png</file>
+        <file>images/image.png</file>
+        <file>images/none.png</file>
+        <file>images/power.png</file>
+        <file>images/pulse.png</file>
+        <file>images/random.png</file>
+        <file>images/reboot.png</file>
+        <file>images/spectrum.png</file>
+        <file>images/warning.png</file>
+        <file>images/wrench.png</file>
+        <file>images/x.png</file>
+        <file>images/bolt.png</file>
+        <file>images/logo.png</file>
+        <file>images/scratchy.png</file>
+    </qresource>
+</RCC>
