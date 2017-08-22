@@ -11,6 +11,42 @@
 #include <QThread>
 
 #include <QDebug>
+#include <QThread>
+
+
+class ExternalEventLoop : public QThread
+{
+protected:
+    void run() { exec(); }
+};
+
+class DisplayDetachable : public QObject
+{
+    Q_OBJECT
+
+public:
+    DisplayDetachable();
+    virtual ~DisplayDetachable();
+
+    enum FontSize
+    {
+        Small, Medium, Big
+    };
+
+signals:
+    void finished();
+
+public slots:
+    void clear();
+    void setDisplay(int icon, QString header, QString body);
+    void setText(const QString& text);
+
+protected:
+    void setIcon(GraphicalDisplay::Icon icon);
+    void drawText(const QString& text, unsigned int offset, unsigned int xOffset, FontSize size);
+
+    bool initialized = false;
+};
 
 GraphicalDisplay::GraphicalDisplay()
 {
@@ -121,8 +157,8 @@ void DisplayDetachable::setDisplay(int icon, QString header, QString body)
     if(!initialized) return;
     clear();
     setIcon((GraphicalDisplay::Icon)icon);
-    drawText(header, 2, 35, GraphicalDisplay::FontSize::Big);     // 8x12 pixel font
-    drawText(body,  16, 35, GraphicalDisplay::FontSize::Small);   // 6x 8 pixel font
+    drawText(header, 2, 35, DisplayDetachable::FontSize::Big);     // 8x12 pixel font
+    drawText(body,  16, 35, DisplayDetachable::FontSize::Small);   // 6x 8 pixel font
     ImageHandlingOLED::display();
     usleep(100);
 }
@@ -156,7 +192,7 @@ void DisplayDetachable::setText(const QString& text)
     }
 
 
-    drawText(txt, 0, 0, GraphicalDisplay::FontSize::Small);   // 6x 8 pixel font
+    drawText(txt, 0, 0, DisplayDetachable::FontSize::Small);   // 6x 8 pixel font
     ImageHandlingOLED::display();
     usleep(100);
 }
@@ -184,14 +220,14 @@ void DisplayDetachable::setIcon(GraphicalDisplay::Icon icon)
 }
 
 
-void DisplayDetachable::drawText(const QString& text, unsigned int offset, unsigned int xOffset, GraphicalDisplay::FontSize size)
+void DisplayDetachable::drawText(const QString& text, unsigned int offset, unsigned int xOffset, DisplayDetachable::FontSize size)
 {
     if(!initialized) return;
     // TODO: Allow animation of long lines (scrolling text)!
 
     const unsigned int availablePixels = 128 - xOffset;
-    unsigned int fontWidth = ((size == GraphicalDisplay::FontSize::Small)? 6 : 8);
-    unsigned int fontHeight = ((size == GraphicalDisplay::FontSize::Big)? 12 : 8);
+    unsigned int fontWidth = ((size == DisplayDetachable::FontSize::Small)? 6 : 8);
+    unsigned int fontHeight = ((size == DisplayDetachable::FontSize::Big)? 12 : 8);
     int availableCharactersX = availablePixels / fontWidth;
     int availableCharactersY = (32 - offset) / fontHeight;
 
@@ -212,19 +248,19 @@ void DisplayDetachable::drawText(const QString& text, unsigned int offset, unsig
 
         switch(size)
         {
-        case GraphicalDisplay::FontSize::Small:
+        case FontSize::Small:
             rastafont6x8_blit_string(reinterpret_cast<unsigned int*>(renderBuffer.bits()),
                                      availablePixels * sizeof(unsigned int),
                                      0xFFFFFFFF, currentLine.c_str());
             break;
 
-        case GraphicalDisplay::FontSize::Medium:
+        case FontSize::Medium:
             rastafont8x8_blit_string(reinterpret_cast<unsigned int*>(renderBuffer.bits()),
                                      availablePixels * sizeof(unsigned int),
                                      0xFFFFFFFF, currentLine.c_str());
             break;
 
-        case GraphicalDisplay::FontSize::Big:
+        case FontSize::Big:
             rastafont8x12_blit_string(reinterpret_cast<unsigned int*>(renderBuffer.bits()),
                                       availablePixels * sizeof(unsigned int),
                                       0xFFFFFFFF, currentLine.c_str());

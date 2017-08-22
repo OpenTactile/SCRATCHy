@@ -5,18 +5,13 @@
 #include <QString>
 #include <QPixmap>
 #include <QPoint>
-#include <QThread>
 
-// Warning: BeagleBone uses /dev/i2c-2 instead of /dev/i2c-1
 class DisplayDetachable;
+class ExternalEventLoop;
 
 class GraphicalDisplay
 {
-public:
-    GraphicalDisplay();
-    ~GraphicalDisplay();
-    bool detach();
-
+public:    
     enum Icon
     {
         None,
@@ -42,24 +37,17 @@ public:
 
     enum Button
     {
-        // BeagleBone
-        // Back = 11,
-        // Up = 12,
-        // Down = 13,
-        // Select = 26
-
-        // Raspberry
+        // Raspberry Pi 3
         Back = 4,
         Up = 6,
         Down = 5,
         Select = 1
     };
 
-    enum FontSize
-    {
-        Small, Medium, Big
-    };
+    GraphicalDisplay();
+    ~GraphicalDisplay();
 
+    bool detach();
     bool isPressed(Button button);
 
     void clear();
@@ -68,41 +56,10 @@ public:
 
     void errorShutdown(QString message, unsigned int timeout = 5);
 
-signals:
-
 protected:
     DisplayDetachable* impl = nullptr;
-
-    class ExternalEventLoop : public QThread
-    {
-    protected:
-        void run() { exec(); }
-    };
-
     ExternalEventLoop* thread = nullptr;
 };
 
-class DisplayDetachable : public QObject
-{
-    Q_OBJECT
-
-public:
-    DisplayDetachable();
-    virtual ~DisplayDetachable();
-
-signals:
-    void finished();
-
-public slots:
-    void clear();
-    void setDisplay(int icon, QString header, QString body);
-    void setText(const QString& text);
-
-protected:
-    void setIcon(GraphicalDisplay::Icon icon);
-    void drawText(const QString& text, unsigned int offset, unsigned int xOffset, GraphicalDisplay::FontSize size);
-
-    bool initialized = false;
-};
 
 #endif // GRAPHICALDISPLAY_H

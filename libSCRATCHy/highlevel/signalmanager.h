@@ -14,7 +14,7 @@ public:
     SignalManager();
     ~SignalManager();
 
-    bool initializeBoards(GraphicalDisplay* display = nullptr, unsigned int dacResolution = 9);
+    bool initializeBoards(unsigned int dacResolution = 9, unsigned int samplingTime = 62);
 
     // Get a list of used I2C addresses
     QVector<uint8_t> scanDevices();
@@ -33,13 +33,14 @@ public:
 
     void maskDevice(uint8_t address);
 
-    QList<SignalGenerator *> generators();
-    QList<uint8_t> addresses();
+    QVector<SignalGenerator>& generators();
+    QList<uint8_t> addresses() const;
 
-    SignalGenerator* generator(uint8_t address);
+    SignalGenerator& generator(uint8_t address);
 
 protected:
-    QMap<uint8_t, SignalGenerator*> generatorMap;
+    QMap<uint8_t, int> generatorMap;
+    QVector<SignalGenerator> generatorList;
     QVector<uint8_t> maskedDevices;
 };
 

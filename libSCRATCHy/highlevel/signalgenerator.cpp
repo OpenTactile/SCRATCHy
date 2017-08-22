@@ -44,7 +44,6 @@ namespace SignalGeneratorInt
 SignalGenerator::SignalGenerator(uint8_t address)
 {
     this->addr = address;
-    //timer.start(1000, Qt::CoarseTimer, this);
 }
 
 SignalGenerator::~SignalGenerator()
@@ -164,12 +163,6 @@ void SignalGenerator::setSamplingRate(unsigned int rate)
     SignalGeneratorInt::i2cSendCommand(addr, SystemRequest::SetSamplingRate, rate);
 }
 
-void SignalGenerator::setPanicMask(unsigned char mask)
-{
-    Q_UNUSED(mask);
-    // Not implemented, yet
-}
-
 void SignalGenerator::finishR2()
 {
     SignalGeneratorInt::i2cSendCommand(addr, SystemRequest::FinishR2, 0);
@@ -181,11 +174,11 @@ void SignalGenerator::startSignalGeneration() const
     SignalGeneratorInt::i2cSendCommand(addr, SystemRequest::StartLoop, 0);
 }
 
-void SignalGenerator::sendTables(const FrequencyTable* data)
+void SignalGenerator::sendTables(const FrequencyTable& data)
 {
     IO::GPIOSetAddress(addr);
     usleep(65);
-    IO::SPISend(reinterpret_cast<const uint16_t*>(data), sizeof(FrequencyTable) * 4);
+    IO::SPISend(reinterpret_cast<const uint16_t*>(&data), sizeof(FrequencyTable) * 4);
     IO::GPIOSetAddress(0);
     usleep(65);
 }

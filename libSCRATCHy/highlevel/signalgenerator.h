@@ -86,7 +86,7 @@ enum class SystemRequest
 class SignalGenerator
 {
 public:
-    SignalGenerator(uint8_t address);
+    SignalGenerator(uint8_t address = 0);
     ~SignalGenerator();
 
     uint8_t address() const;
@@ -105,12 +105,11 @@ public:
     // Runlevel 2 only
     void setDACResolution(uint8_t resolution);
     void setSamplingRate(uint32_t rate);
-    void setPanicMask(uint8_t mask);
     void finishR2();
 
     // Runlevel 3 only
     void startSignalGeneration() const;
-    void sendTables(const FrequencyTable *data);
+    void sendTables(const FrequencyTable& data);
     void shutdown(); // Advance to Runlevel 4
 
 private:

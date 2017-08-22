@@ -1,11 +1,8 @@
 #include "signalmanager.h"
 
-#include "lowlevel/iowrap.h"
 #include <QDebug>
-
 #include <unistd.h>
-
-#include "graphicaldisplay.h"
+#include "lowlevel/iowrap.h"
 #include "signalgenerator.h"
 
 namespace SignalManagerInt
@@ -37,63 +34,58 @@ SignalManager::~SignalManager()
     IO::SPIFree();
     IO::GPIOFree();
 
-    for(SignalGenerator* g : generatorMap.values())
-        delete g;
+    generatorList.clear();
 }
 
 
-bool SignalManager::initializeBoards(GraphicalDisplay* display, unsigned int dacResolution)
+bool SignalManager::initializeBoards(unsigned int dacResolution, unsigned int samplingTime)
 {
     const unsigned long defaultWait = 100000;
-
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoards", QString("Initialization"));
-    qDebug() << "Available I2C devices:" << scanDevices();
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "Reset");
+    qDebug() << "Initializing Signal Boards";
+    qDebug() << "\tAvailable I2C devices:" << scanDevices();
+    qDebug() << "\tReset";
     reset();
     sleep(1);
 
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "Initialization");
+    qDebug() << "\tInitialization";
     initSystem();
     usleep(defaultWait);
 
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "Device scan");
+    qDebug() << "\tDevice scan";
     assignAddresses();
     usleep(defaultWait);
-    qDebug() << "Available I2C devices:" << scanDevices();
+    qDebug() << "\tAvailable I2C devices:" << scanDevices();
 
-
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "r0 -> r1");
-    for(SignalGenerator* g : generators())
-        g->finishR0();
+    qDebug() << "\tr0 -> r1";
+    for(SignalGenerator& g : generators())
+        g.finishR0();
     sleep(1);
 
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Bolt, "SignalBoard", "SPI check");
+    qDebug() << "\tSPI check";
     gatherSPISpeed();
     usleep(defaultWait);
 
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "r1 -> r2");
-    for(SignalGenerator* g : generators())
-        g->finishR1();
+    qDebug() << "\tr1 -> r2";
+    for(SignalGenerator& g : generators())
+        g.finishR1();
     usleep(defaultWait);
 
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "r2 -> r3");
-    for(SignalGenerator* g : generators())
-    {
-        //g->setPanicMask(0b0000);
-        //g->setSamplingRate(samplingRate); // Use board defaults
-        g->setDACResolution(dacResolution);
+    qDebug() << "\tr2 -> r3";
+    for(SignalGenerator& g : generators())
+    {        
+        g.setSamplingRate(samplingTime);
+        g.setDACResolution(dacResolution);
         usleep(1e6);
-        g->finishR2();
+        g.finishR2();
     }
     usleep(defaultWait);
 
-    if(display) display->setDisplay(GraphicalDisplay::Icon::Pulse, "SignalBoard", "Start loop");
-    for(SignalGenerator* g : generators())
-        g->startSignalGeneration();
+    qDebug() << "Start signal loop";
+    for(SignalGenerator& g : generators())
+        g.startSignalGeneration();
     usleep(defaultWait);
 
     // TODO: Wait till all boards reached r3 und return false after a certain time
-
     return true;
 }
 
@@ -110,11 +102,9 @@ QVector<uint8_t> SignalManager::scanDevices()
 
     for(int n = 1; n < 255; n++)
     {
-        //qDebug() << "[I2C] Scan port:" << n;
         if(!maskedDevices.contains(n) &&
                 SignalManagerInt::i2cSendCommand(n, SystemRequest::Alive, 0))
         {
-            //qDebug() << "Found I2C device:" << n;
             found << n;
         }
     }
@@ -151,9 +141,8 @@ void SignalManager::initSystem()
 void SignalManager::assignAddresses()
 {
     qDebug() << "Clearing previous mapping...";
-    for(SignalGenerator* gen : generatorMap)
-        delete gen;
     generatorMap.clear();
+    generatorList.clear();
 
     qDebug() << "Assigning I2C addresses...";
 
@@ -168,7 +157,8 @@ void SignalManager::assignAddresses()
         if(SignalManagerInt::i2cSendCommand(n, SystemRequest::Alive, 0) )
         {
             qDebug() << "Assigned address no." << n;
-            generatorMap[n] = new SignalGenerator(n);
+            generatorList.append(SignalGenerator(n));
+            generatorMap[n] = generatorList.count() - 1;
         }
     }
 
@@ -187,17 +177,17 @@ void SignalManager::gatherSPISpeed()
     */
 }
 
-QList<SignalGenerator*> SignalManager::generators()
+QVector<SignalGenerator>& SignalManager::generators()
 {
-    return generatorMap.values();
+    return generatorList;
 }
 
-QList<uint8_t> SignalManager::addresses()
+QList<uint8_t> SignalManager::addresses() const
 {
     return generatorMap.keys();
 }
 
-SignalGenerator* SignalManager::generator(uint8_t address)
+SignalGenerator& SignalManager::generator(uint8_t address)
 {
-    return generatorMap[address];
+    return generatorList[generatorMap[address]];
 }
