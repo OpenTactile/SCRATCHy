@@ -12,7 +12,7 @@ namespace OLEDDisplay
     extern int height;
     extern bool initDone;
     extern int pages;
-    void init(int resetGPIOpin = 7, const QString &i2cdevice = "/dev/i2c-1", int vccstate = SSD1306_SWITCHCAPVCC);
+    void init(int resetGPIOpin = 7, int vccstate = SSD1306_SWITCHCAPVCC);
     void drawPic(const unsigned char *data);
     void set_contrast(unsigned char contrast);
     void dim(bool dim);

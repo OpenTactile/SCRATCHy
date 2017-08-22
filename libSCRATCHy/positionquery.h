@@ -21,7 +21,10 @@ public:
 
     virtual void update() = 0;
 
-    virtual void feedback(unsigned char r, unsigned char g, unsigned char b) {}
+    virtual void feedback(unsigned char r, unsigned char g, unsigned char b)
+    {
+        Q_UNUSED(r); Q_UNUSED(g); Q_UNUSED(b);
+    }
 
 };
 

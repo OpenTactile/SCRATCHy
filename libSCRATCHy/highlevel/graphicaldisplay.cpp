@@ -192,8 +192,8 @@ void DisplayDetachable::drawText(const QString& text, unsigned int offset, unsig
     const unsigned int availablePixels = 128 - xOffset;
     unsigned int fontWidth = ((size == GraphicalDisplay::FontSize::Small)? 6 : 8);
     unsigned int fontHeight = ((size == GraphicalDisplay::FontSize::Big)? 12 : 8);
-    unsigned int availableCharactersX = availablePixels / fontWidth;
-    unsigned int availableCharactersY = (32 - offset) / fontHeight;
+    int availableCharactersX = availablePixels / fontWidth;
+    int availableCharactersY = (32 - offset) / fontHeight;
 
     QStringList lines = text.split('\n');
 

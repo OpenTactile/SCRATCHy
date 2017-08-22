@@ -86,7 +86,7 @@ namespace MouseEvents
                     bytes = read(fd, &event, sizeof(event));
 
 
-                    if(bytes == sizeof(event))
+                    if(bytes == static_cast<int>(sizeof(event)))
                     {
                         for(int i=0; i<events; i++) {
                             if(event[i].type == EV_KEY) // Button Pressed

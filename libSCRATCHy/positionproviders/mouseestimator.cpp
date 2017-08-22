@@ -37,6 +37,7 @@ void MouseEstimator::setCalibration(float distance) {
 }
 
 void MouseEstimator::updateMouse(int x, int y, unsigned long time, bool button) {
+    Q_UNUSED(time);
     QVector2D accelerationBuffer = QVector2D(x,-y);
 
     accumulatedVal += accelerationBuffer;

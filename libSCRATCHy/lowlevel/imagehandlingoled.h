@@ -7,7 +7,7 @@ namespace ImageHandlingOLED
 {
     extern bool initDone;
     extern QImage actlImage;
-    void init(int resetGPIOpin = 7, const QString &i2cdevice = "/dev/i2c-1");
+    void init(int resetGPIOpin = 7);
     void clear(int color = 0);
     void drawText(int x, int y, const QString& str, QFont font);
     void drawImage(int x, int y, bool center, const QString& fn);

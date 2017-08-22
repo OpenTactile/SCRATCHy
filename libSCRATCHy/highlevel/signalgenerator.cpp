@@ -107,8 +107,7 @@ bool SignalGenerator::spiCheck(unsigned short divider) const
     unsigned char data[128];
     for(int n = 0; n < 128; n++)
     {
-        data[n] = 10;//rand();
-        qDebug((QString::number(data[n]) + " ").toLocal8Bit());
+        data[n] = rand();
     }
 
     unsigned long crcGoal = SignalGeneratorInt::crc32(data, 128);

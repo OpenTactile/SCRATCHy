@@ -115,7 +115,6 @@ public:
 
 private:
     uint8_t addr;
-    unsigned char runlevel;
 };
 
 #endif // SIGNALGENERATOR_H

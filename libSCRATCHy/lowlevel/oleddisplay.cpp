@@ -53,7 +53,7 @@ namespace OLEDDisplay
     void command(int cmd);
     void reset();
 
-    void init(int resetGPIOpin, const QString& i2cdevice, int vccstate)
+    void init(int resetGPIOpin, int vccstate)
     {
         assert(!initDone);
         IO::GPIOInit();
