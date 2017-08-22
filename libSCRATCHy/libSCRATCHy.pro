@@ -26,7 +26,6 @@ SOURCES += \
     lowlevel/mouseevents.cpp \
     lowlevel/imagehandlingoled.cpp \
     positionproviders/mouseeventtransmitter.cpp \
-    positionproviders/mouseestimator.cpp \
     highlevel/graphicaldisplay.cpp \
     highlevel/signalgenerator.cpp \
     highlevel/signalmanager.cpp \
@@ -50,7 +49,6 @@ HEADERS +=\
     lowlevel/mouseevents.h \
     lowlevel/imagehandlingoled.h \
     positionproviders/mouseeventtransmitter.h \
-    positionproviders/mouseestimator.h \
     highlevel/graphicaldisplay.h \
     highlevel/signalgenerator.h \
     highlevel/signalmanager.h \

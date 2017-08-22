@@ -30,9 +30,8 @@ bool MouseEventTransmitter::initialize()
 void MouseEventTransmitter::update() {
     int x=0;
     int y=0;
-    unsigned long time=0.0;
     while(true) {
-        MouseEvents::getPos(x,y,time,button);
-        emit mouseChanged(x,y,time,button);
+        MouseEvents::getPos(x,y,button);
+        emit mouseChanged(x,y,button);
     }
 }

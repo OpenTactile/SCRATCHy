@@ -20,7 +20,7 @@ public:
     virtual bool initialize();
 
 private:
-    struct impl;
+    class impl;
     impl* implementation;
 };
 

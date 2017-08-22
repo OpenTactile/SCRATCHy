@@ -14,7 +14,7 @@ public slots:
     void update();
 
 signals:
-    void mouseChanged(int x, int y, unsigned long time, bool button);
+    void mouseChanged(int x, int y, bool button);
 
 private:
     bool button = false;

@@ -46,6 +46,7 @@ enum class SystemRequest
     // reliable speed for SPI communication. Several packages of 1kByte
     // size are sent by the mainboard via SPI and a checksum (CRC32) is
     // requested. This test can be performed several times.
+    // NOTE: This feature is currently not implemented yet.
     FinishR1            = 0b00101111, // Advance to runlevel 2
     SPIPrepare          = 0b00100001,
     SPIChecksum         = 0b00100000, // Calculate and send back CRC32 checksum
@@ -100,7 +101,6 @@ public:
     // Runlevel 1 only
     bool spiCheck(uint16_t divider = 16) const;
     void finishR1();
-
 
     // Runlevel 2 only
     void setDACResolution(uint8_t resolution);
