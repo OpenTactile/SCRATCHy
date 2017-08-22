@@ -27,9 +27,9 @@ SOURCES += \
     lowlevel/imagehandlingoled.cpp \
     positionproviders/mouseeventtransmitter.cpp \
     positionproviders/mouseestimator.cpp \
-    hardwareabstraction/graphicaldisplay.cpp \
-    hardwareabstraction/signalgenerator.cpp \
-    hardwareabstraction/signalmanager.cpp \
+    highlevel/graphicaldisplay.cpp \
+    highlevel/signalgenerator.cpp \
+    highlevel/signalmanager.cpp \
     positionproviders/constantvelocityquery.cpp \
     positionproviders/mousepositionquery.cpp     
 
@@ -51,9 +51,9 @@ HEADERS +=\
     lowlevel/imagehandlingoled.h \
     positionproviders/mouseeventtransmitter.h \
     positionproviders/mouseestimator.h \
-    hardwareabstraction/graphicaldisplay.h \
-    hardwareabstraction/signalgenerator.h \
-    hardwareabstraction/signalmanager.h \
+    highlevel/graphicaldisplay.h \
+    highlevel/signalgenerator.h \
+    highlevel/signalmanager.h \
     positionproviders/constantvelocityquery.h \
     positionproviders/mousepositionquery.h \    
     lowlevel/iowrap.h \
