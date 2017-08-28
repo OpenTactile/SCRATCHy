@@ -1,7 +1,7 @@
 #ifndef CONSTANTVELOCITYQUERY_H
 #define CONSTANTVELOCITYQUERY_H
 
-#include "highlevel/positionquery.h"
+#include <scratchy/positionquery.h>
 
 class ConstantVelocityQuery : public PositionQuery
 {

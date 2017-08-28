@@ -30,7 +30,8 @@ SOURCES += \
     highlevel/signalgenerator.cpp \
     highlevel/signalmanager.cpp \
     positionproviders/constantvelocityquery.cpp \
-    positionproviders/mousepositionquery.cpp     
+    positionproviders/mousepositionquery.cpp \     
+    highlevel/displaydetachable.cpp
 
 fake {
     SOURCES += lowlevel/iowrap_dummy.cpp
@@ -55,8 +56,9 @@ HEADERS +=\
     positionproviders/constantvelocityquery.h \
     positionproviders/mousepositionquery.h \    
     lowlevel/iowrap.h \
-    scratchy.h \
-    highlevel/positionquery.h
+    highlevel/positionquery.h \
+    scratchy \
+    highlevel/displaydetachable.h
 
 
 LIBS += -lusb -latomic
@@ -71,14 +73,13 @@ RESOURCES += \
 unix {
     target.path = $${INSTALL_PATH_LIB}
     header_files.path = $${INSTALL_PATH_INCLUDE}
-    header_files.files = scratchy.h\
-        hardwareabstraction/signalgenerator.h \
-        hardwareabstraction/signalmanager.h \
-        hardwareabstraction/graphicaldisplay.h \
-        positionquery.h \
+    header_files.files = scratchy\
+        highlevel/signalgenerator.h \
+        highlevel/signalmanager.h \
+        highlevel/graphicaldisplay.h \
+        highlevel/positionquery.h \
         positionproviders/constantvelocityquery.h \
         positionproviders/mousepositionquery.h \
-        positionproviders/tactilemousepositionquery.h \
         lowlevel/iowrap.h
 
     INSTALLS += target header_files

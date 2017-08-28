@@ -1,0 +1,41 @@
+#ifndef DISPLAYDETACHABLE_H
+#define DISPLAYDETACHABLE_H
+
+#include <QThread>
+#include <scratchy/graphicaldisplay.h>
+
+class ExternalEventLoop : public QThread
+{
+protected:
+    void run() { exec(); }
+};
+
+class DisplayDetachable : public QObject
+{
+    Q_OBJECT
+
+public:
+    DisplayDetachable();
+    virtual ~DisplayDetachable();
+
+    enum FontSize
+    {
+        Small, Medium, Big
+    };
+
+signals:
+    void finished();
+
+public slots:
+    void clear();
+    void setDisplay(int icon, QString header, QString body);
+    void setText(const QString& text);
+
+protected:
+    void setIcon(GraphicalDisplay::Icon icon);
+    void drawText(const QString& text, unsigned int offset, unsigned int xOffset, FontSize size);
+
+    bool initialized = false;
+};
+
+#endif // DISPLAYDETACHABLE_H
