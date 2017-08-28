@@ -1,0 +1,62 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=MainComputeUnit
+*Date=11:24:07
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;;31.0909;-80.8399;0;Bottom;Via92
+2;;;32.3738;-64.3261;0;Bottom;Via98
+3;;;90.9062;-31.3415;90;Bottom;C4
+4;;;86.908;-90.3837;0;Bottom;Via77
+5;;;48.2044;-71.9867;0;Bottom;Via97
+6;;;6.56431;-70.7782;0;Bottom;IMG4
+7;;;24.0761;-62.4566;0;Bottom;Via79
+8;;;24.094;-43.4371;0;Bottom;Via74
+9;;;92.021;-78.9666;0;Bottom;Via89
+10;;;105.356;-80.8715;0;Bottom;Hole2
+11;;;24.1041;-54.8756;0;Bottom;Via84
+12;;;24.0761;-67.5365;0;Bottom;Via80
+13;;;4.39118;-96.1115;0;Bottom;Hole1
+14;;;44.5942;-44.8445;-90;Bottom;Raspberry Pi 1
+15;;;15.2004;-55.4941;0;Bottom;Via101
+16;;1206 [SMD];73.6061;-3.75654;-90;Top;Power
+17;;;62.7784;-77.0805;0;Bottom;Via95
+18;;;52.0247;-74.5336;0;Bottom;Via94
+19;;;15.7964;-84.7064;0;Bottom;Via71
+20;;THT;100.277;-42.743;180;Bottom;Power Supply
+21;;THT;8.83722;-68.143;0;Bottom;Data Lines
+22;;;92.021;-92.9366;0;Bottom;Via66
+23;;;89.481;-87.8566;0;Bottom;Via11
+24;;;24.1041;-59.8796;0;Bottom;Via83
+25;;;13.916;-44.6766;0;Bottom;Via99
+26;;;14.5488;-8.37741;0;Bottom;IMG3
+27;;;90.9062;-58.0115;90;Bottom;C1
+28;;;4.39118;-12.9265;0;Bottom;Hole3
+29;;;18.383;-94.8618;0;Bottom;Via68
+30;;;15.2004;-59.2961;0;Bottom;Via100
+31;;;50.7461;-75.7916;0;Bottom;Via93
+32;;;27.2238;-84.7064;0;Bottom;Via72
+33;;;73.6061;-13.5615;0;Bottom;Via15
+34;;;90.9062;-40.2315;90;Bottom;C3
+35;;THT;100.276;-81.5065;0;Bottom;Remote Display
+36;;;102.52;-42.8861;0;Bottom;IMG3
+37;;;90.9062;-49.1215;90;Bottom;C2
+38;;;27.2511;-43.4066;0;Bottom;Via73
+39;;;54.5717;-71.35;0;Bottom;Via96
+40;;;87.136;-90.6616;0;Bottom;Power In
+41;;;92.021;-90.3966;0;Bottom;Via69
+42;;;4.391;-69.4415;0;Bottom;Via65
+43;;;105.356;-12.9265;0;Bottom;Hole4
+44;;;3.121;-75.7916;0;Bottom;Via64
+45;;;98.9775;-92.9722;0;Bottom;Via67
+46;220;0805 [SMD];73.6061;-9.36154;-90;Top;R6
+47;;;92.547;-5.13746;0;Bottom;IMG2
