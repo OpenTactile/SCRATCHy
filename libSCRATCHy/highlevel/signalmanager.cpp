@@ -1,9 +1,9 @@
-#include "signalmanager.h"
+#include "scratchy/signalmanager.h"
 
 #include <QDebug>
 #include <unistd.h>
-#include "lowlevel/iowrap.h"
-#include "signalgenerator.h"
+#include "scratchy/iowrap.h"
+#include "scratchy/signalgenerator.h"
 
 namespace SignalManagerInt
 {

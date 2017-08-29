@@ -1,4 +1,4 @@
-#include "iowrap.h"
+#include "scratchy/iowrap.h"
 
 #include <assert.h>
 #include <stdlib.h>

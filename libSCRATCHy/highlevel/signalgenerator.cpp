@@ -1,6 +1,5 @@
-#include "signalgenerator.h"
-
-#include "lowlevel/iowrap.h"
+#include "scratchy/signalgenerator.h"
+#include "scratchy/iowrap.h"
 
 #include <QDebug>
 #include <random>

@@ -1,4 +1,4 @@
-#include "mousepositionquery.h"
+#include "scratchy/mousepositionquery.h"
 #include "positionproviders/mouseeventtransmitter.h"
 #include <QDebug>
 #include <QElapsedTimer>

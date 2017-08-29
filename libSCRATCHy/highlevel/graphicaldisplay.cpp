@@ -1,6 +1,6 @@
-#include "graphicaldisplay.h"
+#include "scratchy/graphicaldisplay.h"
 
-#include "lowlevel/iowrap.h"
+#include "scratchy/iowrap.h"
 #include "highlevel/displaydetachable.h"
 
 #include <unistd.h>
