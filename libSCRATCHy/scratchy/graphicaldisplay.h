@@ -9,41 +9,41 @@
 class DisplayDetachable;
 class ExternalEventLoop;
 
+enum Icon
+{
+    None,
+    wlLogo,
+    Logo,
+    Spectrum,
+    Forbidden,
+    Bolt,
+    Bug,
+    Check,
+    Clock,
+    Cog,
+    Fire,
+    Image,
+    Reboot,
+    Power,
+    Pulse,
+    Random,
+    Warning,
+    Wrench,
+    X
+};
+
+enum Button
+{
+    // Raspberry Pi 3
+    Back = 4,
+    Up = 6,
+    Down = 5,
+    Select = 1
+};
+
 class GraphicalDisplay
 {
-public:    
-    enum Icon
-    {
-        None,
-        wlLogo,
-        Logo,
-        Spectrum,
-        Forbidden,
-        Bolt,
-        Bug,
-        Check,
-        Clock,
-        Cog,
-        Fire,
-        Image,
-        Reboot,
-        Power,
-        Pulse,
-        Random,
-        Warning,
-        Wrench,
-        X
-    };
-
-    enum Button
-    {
-        // Raspberry Pi 3
-        Back = 4,
-        Up = 6,
-        Down = 5,
-        Select = 1
-    };
-
+public:
     GraphicalDisplay();
     ~GraphicalDisplay();
 
@@ -51,10 +51,9 @@ public:
     bool isPressed(Button button);
 
     void clear();
-    void setDisplay(Icon icon, const QString& header, const QString& body);
-    void setText(const QString& text);
-
-    void errorShutdown(QString message, unsigned int timeout = 5);
+    void show(Icon icon, const QString& header, const QString& body);
+    void show(Icon icon, const QString& header, float body);
+    void text(const QString& text);
 
 protected:
     DisplayDetachable* impl = nullptr;

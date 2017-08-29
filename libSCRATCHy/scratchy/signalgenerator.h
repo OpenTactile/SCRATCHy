@@ -2,16 +2,23 @@
 #define SIGNALGENERATOR_H
 
 #include <cstdint>
+#include <array>
+template<int Q>
+struct fixed_t {
+    fixed_t(float v = 0.0f) { value = static_cast<uint16_t>(v * (1 << Q)); }
+    fixed_t(double v) { value = static_cast<uint16_t>(v * (1 << Q)); }
+    operator float() const { return value / static_cast<float>(1 << Q); }
+    uint16_t value;
+};
 
-const int FREQUENCY_COUNT_HW = 10;
 
-using fixed_q5 = uint16_t;
-using fixed_q15 = uint16_t;
+using fixed_q5 = fixed_t<5>;
+using fixed_q15 = fixed_t<15>;
 
 struct FrequencyTable
 {
-    fixed_q5  frequency[FREQUENCY_COUNT_HW] = {0};
-    fixed_q15 amplitude[FREQUENCY_COUNT_HW] = {0};
+    std::array<fixed_q5, 10> frequency;
+    std::array<fixed_q15, 10> amplitude;
 };
 
 enum class SystemStatus
@@ -108,8 +115,11 @@ public:
     void finishR2();
 
     // Runlevel 3 only
-    void startSignalGeneration() const;
-    void sendTables(const FrequencyTable& data);
+    void startSignalGeneration() const;    
+    void send(const std::array<FrequencyTable, 4>& data);
+    void send(const FrequencyTable& dataABCD);
+    void send(const FrequencyTable& dataA, const FrequencyTable& dataB,
+              const FrequencyTable& dataC, const FrequencyTable& dataD);
     void shutdown(); // Advance to Runlevel 4
 
 private:

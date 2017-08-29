@@ -2,8 +2,8 @@
 
 int main(int argc, char *argv[]) {
     GraphicalDisplay display;
-    display.setDisplay(GraphicalDisplay::Icon::Logo,
-                       "Demo", "Minimum example");
+    display.show(Icon::Logo,
+                 "Demo", "Minimum example");
     display.detach();
 
     FrequencyTable data;
@@ -20,13 +20,13 @@ int main(int argc, char *argv[]) {
         data.amplitude[0] = 1.0;
 
         for(SignalGenerator& g: controller.generators())
-            g.sendTables(data);
+            g.send(data);
 
-        display.setDisplay(GraphicalDisplay::Icon::Logo, "Frequency",
-                           QString::number(data.frequency[0]));
+        display.show(Icon::Logo, "Frequency",
+                     data.frequency[0]);
 
         // Exit loop if button is pressed
-        if(display.isPressed(GraphicalDisplay::Button::Back))
+        if(display.isPressed(Button::Back))
             break;
     }
 

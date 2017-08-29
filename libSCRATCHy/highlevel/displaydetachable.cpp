@@ -32,7 +32,7 @@ void DisplayDetachable::setDisplay(int icon, QString header, QString body)
 {
     if(!initialized) return;
     clear();
-    setIcon((GraphicalDisplay::Icon)icon);
+    setIcon((Icon)icon);
     drawText(header, 2, 35, DisplayDetachable::FontSize::Big);     // 8x12 pixel font
     drawText(body,  16, 35, DisplayDetachable::FontSize::Small);   // 6x 8 pixel font
     ImageHandlingOLED::display();
@@ -74,7 +74,7 @@ void DisplayDetachable::setText(const QString& text)
 }
 
 
-void DisplayDetachable::setIcon(GraphicalDisplay::Icon icon)
+void DisplayDetachable::setIcon(Icon icon)
 {
     if(!initialized) return;
 

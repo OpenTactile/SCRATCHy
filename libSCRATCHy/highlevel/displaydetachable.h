@@ -32,7 +32,7 @@ public slots:
     void setText(const QString& text);
 
 protected:
-    void setIcon(GraphicalDisplay::Icon icon);
+    void setIcon(Icon icon);
     void drawText(const QString& text, unsigned int offset, unsigned int xOffset, FontSize size);
 
     bool initialized = false;

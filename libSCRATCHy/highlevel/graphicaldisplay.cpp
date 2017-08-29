@@ -57,7 +57,12 @@ bool GraphicalDisplay::isPressed(Button button)
     return IO::GPIOIsLow(button);
 }
 
-void GraphicalDisplay::setDisplay(Icon icon, const QString& header, const QString& body)
+void GraphicalDisplay::show(Icon icon, const QString& header, float body)
+{
+    show(icon, header, QString::number(body));
+}
+
+void GraphicalDisplay::show(Icon icon, const QString& header, const QString& body)
 {    
     int ic = (int)icon;
     QMetaObject::invokeMethod(impl, "setDisplay", thread? Qt::QueuedConnection : Qt::DirectConnection,
@@ -67,23 +72,9 @@ void GraphicalDisplay::setDisplay(Icon icon, const QString& header, const QStrin
 }
 
 
-void GraphicalDisplay::setText(const QString& text)
+void GraphicalDisplay::text(const QString& text)
 {
     QMetaObject::invokeMethod(impl, "setText", thread? Qt::QueuedConnection : Qt::DirectConnection,
                               Q_ARG(QString, text));
 
 }
-
-
-void GraphicalDisplay::errorShutdown(QString message, unsigned int timeout)
-{
-    for(unsigned int n = timeout; n > 0; n--)
-    {
-        setDisplay(Icon::Warning, "Error", message + "\nShutdown in " + QString::number(n));
-        usleep(1000000);
-    }
-
-    setDisplay(Icon::None, "", "");
-    exit(-1);
-}
-
