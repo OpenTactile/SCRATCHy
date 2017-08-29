@@ -10,7 +10,7 @@ namespace MouseEvents
     extern bool initDone;
     void init(const QString &devname);
     QStringList getDevices();
-    void getPos(int &dx, int &dy, unsigned long &time, bool &button);
+    void getPos(int &dx, int &dy, bool &button);
     void free();
 }
 

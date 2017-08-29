@@ -1,12 +1,12 @@
 #ifndef CONSTANTVELOCITYQUERY_H
 #define CONSTANTVELOCITYQUERY_H
 
-#include "positionquery.h"
+#include <scratchy/positionquery.h>
 
 class ConstantVelocityQuery : public PositionQuery
 {
 public:
-    ConstantVelocityQuery(float velocity, float wrapAfter);
+    ConstantVelocityQuery(float velocity = 0.05, float wrapAfter = 0.25);
     ~ConstantVelocityQuery();
 
     // Implementations of interface PositionQuery:

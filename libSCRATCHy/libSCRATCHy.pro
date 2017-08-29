@@ -26,12 +26,12 @@ SOURCES += \
     lowlevel/mouseevents.cpp \
     lowlevel/imagehandlingoled.cpp \
     positionproviders/mouseeventtransmitter.cpp \
-    positionproviders/mouseestimator.cpp \
-    hardwareabstraction/graphicaldisplay.cpp \
-    hardwareabstraction/signalgenerator.cpp \
-    hardwareabstraction/signalmanager.cpp \
+    highlevel/graphicaldisplay.cpp \
+    highlevel/signalgenerator.cpp \
+    highlevel/signalmanager.cpp \
     positionproviders/constantvelocityquery.cpp \
-    positionproviders/mousepositionquery.cpp     
+    positionproviders/mousepositionquery.cpp \     
+    highlevel/displaydetachable.cpp
 
 fake {
     SOURCES += lowlevel/iowrap_dummy.cpp
@@ -44,20 +44,20 @@ fake {
 }
 
 HEADERS +=\
-    external/rastafont/rastafont.h \
-    positionquery.h \
+    external/rastafont/rastafont.h \    
     lowlevel/oleddisplay.h \
     lowlevel/mouseevents.h \
     lowlevel/imagehandlingoled.h \
-    positionproviders/mouseeventtransmitter.h \
-    positionproviders/mouseestimator.h \
-    hardwareabstraction/graphicaldisplay.h \
-    hardwareabstraction/signalgenerator.h \
-    hardwareabstraction/signalmanager.h \
-    positionproviders/constantvelocityquery.h \
-    positionproviders/mousepositionquery.h \    
-    lowlevel/iowrap.h \
-    scratchy.h
+    positionproviders/mouseeventtransmitter.h \    
+    highlevel/displaydetachable.h \
+    scratchy/constantvelocityquery.h \
+    scratchy/graphicaldisplay.h \
+    scratchy/iowrap.h \
+    scratchy/mousepositionquery.h \
+    scratchy/positionquery.h \
+    scratchy/signalgenerator.h \
+    scratchy/signalmanager.h \
+    scratchy/scratchy
 
 
 LIBS += -lusb -latomic
@@ -72,15 +72,14 @@ RESOURCES += \
 unix {
     target.path = $${INSTALL_PATH_LIB}
     header_files.path = $${INSTALL_PATH_INCLUDE}
-    header_files.files = scratchy.h\
-        hardwareabstraction/signalgenerator.h \
-        hardwareabstraction/signalmanager.h \
-        hardwareabstraction/graphicaldisplay.h \
-        positionquery.h \
-        positionproviders/constantvelocityquery.h \
-        positionproviders/mousepositionquery.h \
-        positionproviders/tactilemousepositionquery.h \
-        lowlevel/iowrap.h
+    header_files.files = scratchy/signalgenerator.h \
+        scratchy/signalmanager.h \
+        scratchy/graphicaldisplay.h \
+        scratchy/positionquery.h \
+        scratchy/constantvelocityquery.h \
+        scratchy/mousepositionquery.h \
+        scratchy/iowrap.h \
+        scratchy/scratchy
 
     INSTALLS += target header_files
 }

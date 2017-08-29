@@ -2,16 +2,22 @@
 #define SIGNALGENERATOR_H
 
 #include <cstdint>
+#include <array>
+template<int Q>
+struct fixed_t {
+    fixed_t(float v = 0.0f) { value = static_cast<uint16_t>(v * (1 << Q)); }
+    fixed_t(double v) { value = static_cast<uint16_t>(v * (1 << Q)); }
+    operator float() const { return value / static_cast<float>(1 << Q); }
+    uint16_t value;
+};
 
-const int FREQUENCY_COUNT_HW = 10;
-
-using fixed_q5 = uint16_t;
-using fixed_q15 = uint16_t;
+using fixed_q5 = fixed_t<5>;
+using fixed_q15 = fixed_t<15>;
 
 struct FrequencyTable
 {
-    fixed_q5  frequency[FREQUENCY_COUNT_HW] = {0};
-    fixed_q15 amplitude[FREQUENCY_COUNT_HW] = {0};
+    std::array<fixed_q5, 10> frequency;
+    std::array<fixed_q15, 10> amplitude;
 };
 
 enum class SystemStatus
@@ -46,6 +52,7 @@ enum class SystemRequest
     // reliable speed for SPI communication. Several packages of 1kByte
     // size are sent by the mainboard via SPI and a checksum (CRC32) is
     // requested. This test can be performed several times.
+    // NOTE: This feature is currently not implemented yet.
     FinishR1            = 0b00101111, // Advance to runlevel 2
     SPIPrepare          = 0b00100001,
     SPIChecksum         = 0b00100000, // Calculate and send back CRC32 checksum
@@ -85,7 +92,7 @@ enum class SystemRequest
 class SignalGenerator
 {
 public:
-    SignalGenerator(uint8_t address);
+    SignalGenerator(uint8_t address = 0);
     ~SignalGenerator();
 
     uint8_t address() const;
@@ -101,21 +108,21 @@ public:
     bool spiCheck(uint16_t divider = 16) const;
     void finishR1();
 
-
     // Runlevel 2 only
     void setDACResolution(uint8_t resolution);
     void setSamplingRate(uint32_t rate);
-    void setPanicMask(uint8_t mask);
     void finishR2();
 
     // Runlevel 3 only
-    void startSignalGeneration() const;
-    void sendTables(const FrequencyTable *data);
+    void startSignalGeneration() const;    
+    void send(const std::array<FrequencyTable, 4>& data);
+    void send(const FrequencyTable& dataABCD);
+    void send(const FrequencyTable& dataA, const FrequencyTable& dataB,
+              const FrequencyTable& dataC, const FrequencyTable& dataD);
     void shutdown(); // Advance to Runlevel 4
 
 private:
     uint8_t addr;
-    unsigned char runlevel;
 };
 
 #endif // SIGNALGENERATOR_H

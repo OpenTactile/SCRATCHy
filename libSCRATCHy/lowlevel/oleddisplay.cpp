@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include "iowrap.h"
+#include "scratchy/iowrap.h"
 
 //Constants
 #define SSD1306_I2C_ADDRESS 0x3C    //011110+SA0+RW - 0x3C or 0x3D
@@ -53,7 +53,7 @@ namespace OLEDDisplay
     void command(int cmd);
     void reset();
 
-    void init(int resetGPIOpin, const QString& i2cdevice, int vccstate)
+    void init(int resetGPIOpin, int vccstate)
     {
         assert(!initDone);
         IO::GPIOInit();

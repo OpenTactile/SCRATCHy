@@ -1,4 +1,4 @@
-#include "constantvelocityquery.h"
+#include "scratchy/constantvelocityquery.h"
 #include <QTime>
 #include <cmath>
 #include <QElapsedTimer>

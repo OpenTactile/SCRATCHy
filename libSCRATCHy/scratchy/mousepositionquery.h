@@ -1,13 +1,13 @@
 #ifndef MOUSEPOSITIONQUERY_H
 #define MOUSEPOSITIONQUERY_H
 
-#include "positionquery.h"
+#include <scratchy/positionquery.h>
 
 class MousePositionQuery : public PositionQuery
 {
 public:
     MousePositionQuery();
-    ~MousePositionQuery();
+    virtual ~MousePositionQuery();
 
     // Implementations of interface PositionQuery:
     virtual QVector2D position() const;
@@ -20,7 +20,7 @@ public:
     virtual bool initialize();
 
 private:
-    struct impl;
+    class impl;
     impl* implementation;
 };
 

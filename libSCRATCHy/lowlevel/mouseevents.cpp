@@ -57,12 +57,11 @@ namespace MouseEvents
         return devices;
     }
 
-    void getPos(int& dx, int& dy, unsigned long& time, bool& button)
+    void getPos(int& dx, int& dy, bool& button)
     {
         assert(initDone);
         dx = 0;
         dy = 0;
-        time = 0.0;
 
 //        struct input_event ie;
 //        unsigned char *ptr = (unsigned char*)&ie;
@@ -86,7 +85,7 @@ namespace MouseEvents
                     bytes = read(fd, &event, sizeof(event));
 
 
-                    if(bytes == sizeof(event))
+                    if(bytes == static_cast<int>(sizeof(event)))
                     {
                         for(int i=0; i<events; i++) {
                             if(event[i].type == EV_KEY) // Button Pressed
@@ -96,8 +95,7 @@ namespace MouseEvents
                             }
 
                             if(event[i].type == EV_REL) //|| event.type == EV_ABS)
-                            {                                
-                                time = event[i].time.tv_sec * 1000 + event[i].time.tv_usec / 1000;
+                            {
                                 if (event[i].code == REL_X) dx += event[i].value;
                                 if (event[i].code == REL_Y) dy += event[i].value;                            
                                 return;

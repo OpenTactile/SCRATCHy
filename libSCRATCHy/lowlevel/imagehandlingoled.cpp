@@ -12,10 +12,10 @@ namespace ImageHandlingOLED
     bool initDone;
     QImage actlImage;
 
-    void init(int resetGPIOpin, const QString& i2cdevice)
+    void init(int resetGPIOpin)
     {
         assert(!initDone);
-        OLEDDisplay::init(resetGPIOpin, i2cdevice);
+        OLEDDisplay::init(resetGPIOpin);
         actlImage = QImage(OLEDDisplay::width,OLEDDisplay::height,QImage::Format_Mono);
         //actlImage = QImage(OLEDDisplay::width,OLEDDisplay::height,QImage::Format_RGB888);
         initDone = true;

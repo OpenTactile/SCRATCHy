@@ -1,6 +1,5 @@
-#include "signalgenerator.h"
-
-#include "lowlevel/iowrap.h"
+#include "scratchy/signalgenerator.h"
+#include "scratchy/iowrap.h"
 
 #include <QDebug>
 #include <random>
@@ -44,7 +43,6 @@ namespace SignalGeneratorInt
 SignalGenerator::SignalGenerator(uint8_t address)
 {
     this->addr = address;
-    //timer.start(1000, Qt::CoarseTimer, this);
 }
 
 SignalGenerator::~SignalGenerator()
@@ -107,8 +105,7 @@ bool SignalGenerator::spiCheck(unsigned short divider) const
     unsigned char data[128];
     for(int n = 0; n < 128; n++)
     {
-        data[n] = 10;//rand();
-        qDebug((QString::number(data[n]) + " ").toLocal8Bit());
+        data[n] = rand();
     }
 
     unsigned long crcGoal = SignalGeneratorInt::crc32(data, 128);
@@ -165,12 +162,6 @@ void SignalGenerator::setSamplingRate(unsigned int rate)
     SignalGeneratorInt::i2cSendCommand(addr, SystemRequest::SetSamplingRate, rate);
 }
 
-void SignalGenerator::setPanicMask(unsigned char mask)
-{
-    Q_UNUSED(mask);
-    // Not implemented, yet
-}
-
 void SignalGenerator::finishR2()
 {
     SignalGeneratorInt::i2cSendCommand(addr, SystemRequest::FinishR2, 0);
@@ -182,13 +173,30 @@ void SignalGenerator::startSignalGeneration() const
     SignalGeneratorInt::i2cSendCommand(addr, SystemRequest::StartLoop, 0);
 }
 
-void SignalGenerator::sendTables(const FrequencyTable* data)
+void SignalGenerator::send(const std::array<FrequencyTable, 4>& data)
 {
     IO::GPIOSetAddress(addr);
     usleep(65);
-    IO::SPISend(reinterpret_cast<const uint16_t*>(data), sizeof(FrequencyTable) * 4);
+    IO::SPISend(reinterpret_cast<const uint16_t*>(&data), sizeof(FrequencyTable) * 4);
     IO::GPIOSetAddress(0);
     usleep(65);
+}
+
+void SignalGenerator::send(const FrequencyTable& dataABCD)
+{
+    std::array<FrequencyTable, 4> data{{dataABCD, dataABCD,
+                                        dataABCD, dataABCD}};
+    send(data);
+}
+
+void SignalGenerator::send(const FrequencyTable& dataA,
+                           const FrequencyTable& dataB,
+                           const FrequencyTable& dataC,
+                           const FrequencyTable& dataD)
+{
+    std::array<FrequencyTable, 4> data{{dataA, dataB,
+                                        dataC, dataD}};
+    send(data);
 }
 
 void SignalGenerator::shutdown()
