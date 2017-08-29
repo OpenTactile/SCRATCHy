@@ -1,0 +1,12 @@
+// Highlevel interface
+#include <scratchy/graphicaldisplay.h>
+#include <scratchy/signalmanager.h>
+#include <scratchy/signalgenerator.h>
+#include <scratchy/positionquery.h>
+#include <scratchy/constantvelocityquery.h>
+#include <scratchy/mousepositionquery.h>
+
+// Lowlevel interface
+#include <scratchy/iowrap.h>
+
+
