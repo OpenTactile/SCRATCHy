@@ -2,6 +2,7 @@
 #define DISPLAYDETACHABLE_H
 
 #include <QThread>
+#include <string>
 #include <scratchy/graphicaldisplay.h>
 
 class ExternalEventLoop : public QThread
@@ -37,5 +38,7 @@ protected:
 
     bool initialized = false;
 };
+
+Q_DECLARE_METATYPE(std::string)
 
 #endif // DISPLAYDETACHABLE_H

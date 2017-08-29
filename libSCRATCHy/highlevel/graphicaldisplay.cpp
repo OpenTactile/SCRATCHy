@@ -23,6 +23,8 @@ GraphicalDisplay::GraphicalDisplay()
     IO::GPIOSetDirection(Button::Up, IO::input_pullup);
     IO::GPIOSetDirection(Button::Down, IO::input_pullup);
 
+    qRegisterMetaType<std::string>("std::string");
+
     impl = new DisplayDetachable();
 }
 

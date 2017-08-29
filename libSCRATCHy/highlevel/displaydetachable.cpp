@@ -12,7 +12,8 @@ DisplayDetachable::DisplayDetachable()
 {
     ImageHandlingOLED::init();
     OLEDDisplay::set_contrast(0);
-    initialized = true;
+    initialized = true;    
+    qRegisterMetaType<std::string>("std::string");
 }
 
 DisplayDetachable::~DisplayDetachable()
