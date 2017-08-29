@@ -1,6 +1,7 @@
 #include "scratchpy.h"
 
 #include <scratchy/signalmanager.h>
+#include <scratchy/signalgenerator.h>
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(reset_overloads, reset, 0, 1)
 
@@ -14,7 +15,7 @@ void export_signal_manager() {
             .def("assignAddresses", &SignalManager::assignAddresses)
             .def("gatherSPISpeed", &SignalManager::gatherSPISpeed)
             .def("maskDevice", &SignalManager::maskDevice)
-            .def("generators", &SignalManager::generators)
+//            .def("generators", &SignalManager::generators)
             .def("addresses", &SignalManager::addresses)
             .def("generator", &SignalManager::generator);
 }

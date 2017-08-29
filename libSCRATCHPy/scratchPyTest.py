@@ -9,4 +9,9 @@ display.clear()
 display.text("Hello, World!")
 #time.sleep(5)
 display.show(scratchy.GraphicalDisplay.Icon.wlLogo,"Hello","SCRATCHy")
+
+generator = scratchy.SignalGenerator(10)
+status = generator.status()
+print('Status: {}'.format(status))
+
 #time.sleep(5)
