@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <unistd.h>
+#include <algorithm>
 #include "scratchy/iowrap.h"
 #include "scratchy/signalgenerator.h"
 
@@ -17,6 +18,12 @@ namespace SignalManagerInt
     {
         return IO::I2CSetAddress(targetAddress) &&
                IO::I2CReadBlock(static_cast<int>(command), 4, reinterpret_cast<unsigned char*>(&payload));
+    }
+
+    template<typename T>
+    bool contains(const std::vector<T>& v, T& n)
+    {
+        return std::find(v.begin(), v.end(), n) != v.end();
     }
 }
 
@@ -92,20 +99,20 @@ bool SignalManager::initializeBoards(unsigned int dacResolution, unsigned int sa
 
 void SignalManager::maskDevice(uint8_t address)
 {
-    maskedDevices << address;
+    maskedDevices.push_back(address);
     qDebug() << "[I2C] Masked device" << address;
 }
 
-QVector<uint8_t> SignalManager::scanDevices()
+std::vector<uint8_t> SignalManager::scanDevices()
 {
-    QVector<uint8_t> found;
+    std::vector<uint8_t> found;
 
-    for(int n = 1; n < 255; n++)
+    for(uint8_t n = 1; n < 255; n++)
     {
-        if(!maskedDevices.contains(n) &&
-                SignalManagerInt::i2cSendCommand(n, SystemRequest::Alive, 0))
+        if(!SignalManagerInt::contains<uint8_t>(maskedDevices, n) &&
+           SignalManagerInt::i2cSendCommand(n, SystemRequest::Alive, 0))
         {
-            found << n;
+            found.push_back(n);
         }
     }
 
@@ -122,9 +129,9 @@ void SignalManager::reset(uint8_t address)
 void SignalManager::reset()
 {
     qDebug() << "Global reset initiated!";
-    for(int n = 0; n < 255; n++)
+    for(uint8_t n = 0; n < 255; n++)
     {
-        bool found = !maskedDevices.contains(n) &&
+        bool found = !SignalManagerInt::contains<uint8_t>(maskedDevices, n) &&
                 SignalManagerInt::i2cSendCommand(n, SystemRequest::Reset, 0);
         if(found)
             qDebug() << "Device no." << n << " resetted";
@@ -146,19 +153,19 @@ void SignalManager::assignAddresses()
 
     qDebug() << "Assigning I2C addresses...";
 
-    for(int n = 1; n < 255; n++)
+    for(uint8_t n = 1; n < 255; n++)
     {
-        if(maskedDevices.contains(n)) continue;
+        if(SignalManagerInt::contains<uint8_t>(maskedDevices, n)) continue;
         IO::GPIOSetAddress(n);
-        SignalManagerInt::i2cSendCommand(0x0, SystemRequest::SetI2CAddress, n << (3 * 8));
+        SignalManagerInt::i2cSendCommand(0x0, SystemRequest::SetI2CAddress, static_cast<unsigned int>(n) << (3 * 8));
 
         usleep(1000);
 
         if(SignalManagerInt::i2cSendCommand(n, SystemRequest::Alive, 0) )
         {
             qDebug() << "Assigned address no." << n;
-            generatorList.append(SignalGenerator(n));
-            generatorMap[n] = generatorList.count() - 1;
+            generatorList.push_back(SignalGenerator(n));
+            generatorMap[n] = uint8_t(generatorList.size() - 1);
         }
     }
 
@@ -177,14 +184,17 @@ void SignalManager::gatherSPISpeed()
     */
 }
 
-QVector<SignalGenerator>& SignalManager::generators()
+std::vector<SignalGenerator> &SignalManager::generators()
 {
     return generatorList;
 }
 
-QList<uint8_t> SignalManager::addresses() const
+std::vector<uint8_t> SignalManager::addresses() const
 {
-    return generatorMap.keys();
+    std::vector<uint8_t> keys;
+    for(auto& v: generatorMap)
+        keys.push_back(v.first);
+    return keys;
 }
 
 SignalGenerator& SignalManager::generator(uint8_t address)

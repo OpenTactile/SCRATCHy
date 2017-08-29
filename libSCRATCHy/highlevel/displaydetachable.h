@@ -28,8 +28,8 @@ signals:
 
 public slots:
     void clear();
-    void setDisplay(int icon, QString header, QString body);
-    void setText(const QString& text);
+    void setDisplay(int icon, std::string header, std::string body);
+    void setText(const std::string& text);
 
 protected:
     void setIcon(Icon icon);

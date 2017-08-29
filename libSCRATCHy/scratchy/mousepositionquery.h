@@ -7,7 +7,7 @@ class MousePositionQuery : public PositionQuery
 {
 public:
     MousePositionQuery();
-    ~MousePositionQuery();
+    virtual ~MousePositionQuery();
 
     // Implementations of interface PositionQuery:
     virtual QVector2D position() const;

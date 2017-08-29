@@ -5,6 +5,14 @@
 
 #include <unistd.h>
 #include <QDebug>
+#include <sstream>
+
+/*
+#include <QObject>
+#include <QString>
+#include <QPixmap>
+#include <QPoint>
+*/
 
 GraphicalDisplay::GraphicalDisplay()
 {
@@ -57,24 +65,26 @@ bool GraphicalDisplay::isPressed(Button button)
     return IO::GPIOIsLow(button);
 }
 
-void GraphicalDisplay::show(Icon icon, const QString& header, float body)
+void GraphicalDisplay::show(Icon icon, const std::string& header, float body)
 {
-    show(icon, header, QString::number(body));
+    std::ostringstream ss;
+    ss << body;
+    show(icon, header, ss.str());
 }
 
-void GraphicalDisplay::show(Icon icon, const QString& header, const QString& body)
+void GraphicalDisplay::show(Icon icon, const std::string& header, const std::string& body)
 {    
-    int ic = (int)icon;
+    int ic = static_cast<int>(icon);
     QMetaObject::invokeMethod(impl, "setDisplay", thread? Qt::QueuedConnection : Qt::DirectConnection,
                               Q_ARG(int, ic),
-                              Q_ARG(QString, header),
-                              Q_ARG(QString, body));
+                              Q_ARG(std::string, header),
+                              Q_ARG(std::string, body));
 }
 
 
-void GraphicalDisplay::text(const QString& text)
+void GraphicalDisplay::text(const std::string& text)
 {
     QMetaObject::invokeMethod(impl, "setText", thread? Qt::QueuedConnection : Qt::DirectConnection,
-                              Q_ARG(QString, text));
+                              Q_ARG(std::string, text));
 
 }

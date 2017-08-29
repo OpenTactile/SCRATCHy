@@ -28,19 +28,19 @@ void DisplayDetachable::clear()
     usleep(100);
 }
 
-void DisplayDetachable::setDisplay(int icon, QString header, QString body)
+void DisplayDetachable::setDisplay(int icon, std::string header, std::string body)
 {
     if(!initialized) return;
     clear();
     setIcon((Icon)icon);
-    drawText(header, 2, 35, DisplayDetachable::FontSize::Big);     // 8x12 pixel font
-    drawText(body,  16, 35, DisplayDetachable::FontSize::Small);   // 6x 8 pixel font
+    drawText(QString::fromStdString(header), 2, 35, DisplayDetachable::FontSize::Big);     // 8x12 pixel font
+    drawText(QString::fromStdString(body),  16, 35, DisplayDetachable::FontSize::Small);   // 6x 8 pixel font
     ImageHandlingOLED::display();
     usleep(100);
 }
 
 
-void DisplayDetachable::setText(const QString& text)
+void DisplayDetachable::setText(const std::string &text)
 {
     if(!initialized) return;
     clear();
@@ -48,7 +48,7 @@ void DisplayDetachable::setText(const QString& text)
     QString txt;
     int availableCharacters = 128 / 6;
     int cnt = 0;
-    for(int n = 0; n < text.size(); n++)
+    for(unsigned int n = 0; n < text.size(); n++)
     {
         txt += text.at(n);
         if(text.at(n) == '\n')
@@ -96,7 +96,7 @@ void DisplayDetachable::setIcon(Icon icon)
 }
 
 
-void DisplayDetachable::drawText(const QString& text, unsigned int offset, unsigned int xOffset, DisplayDetachable::FontSize size)
+void DisplayDetachable::drawText(const QString &text, unsigned int offset, unsigned int xOffset, DisplayDetachable::FontSize size)
 {
     if(!initialized) return;
     // TODO: Allow animation of long lines (scrolling text)!

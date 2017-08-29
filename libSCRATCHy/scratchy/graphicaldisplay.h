@@ -1,10 +1,7 @@
 #ifndef GRAPHICALDISPLAY_H
 #define GRAPHICALDISPLAY_H
 
-#include <QObject>
-#include <QString>
-#include <QPixmap>
-#include <QPoint>
+#include <string>
 
 class DisplayDetachable;
 class ExternalEventLoop;
@@ -51,9 +48,9 @@ public:
     bool isPressed(Button button);
 
     void clear();
-    void show(Icon icon, const QString& header, const QString& body);
-    void show(Icon icon, const QString& header, float body);
-    void text(const QString& text);
+    void show(Icon icon, const std::string& header, const std::string& body);
+    void show(Icon icon, const std::string& header, float body);
+    void text(const std::string& text);
 
 protected:
     DisplayDetachable* impl = nullptr;

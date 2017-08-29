@@ -11,7 +11,6 @@ struct fixed_t {
     uint16_t value;
 };
 
-
 using fixed_q5 = fixed_t<5>;
 using fixed_q15 = fixed_t<15>;
 
