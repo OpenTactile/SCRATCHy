@@ -1,20 +1,29 @@
 #include "scratchpy.h"
 
+#include <vector>
 #include <QString>
 
-struct QString_to_python_str
+template <class T>
+struct Vector_to_PythonList {
+    static PyObject* convert(std::vector<T> const& vector) {
+        p::list list;
+        for(auto iter : vector) {
+            list.append(iter);
+        }
+        return p::incref(list.ptr());
+    }
+};
+
+struct QString_to_PythonStr
 {
-    static PyObject* convert(QString const& s)
-      {
-        return boost::python::incref(
-          boost::python::object(
-            s.toLatin1().constData()).ptr());
-      }
+    static PyObject* convert(QString const& s) {
+        return p::incref(p::object(s.toLatin1().constData()).ptr());
+    }
 };
  
-struct QString_from_python_str
+struct QString_from_PythonStr
 {
-    QString_from_python_str()
+    QString_from_PythonStr()
     {
       boost::python::converter::registry::push_back(
         &convertible,
@@ -102,8 +111,16 @@ void initialize_converters()
   // register the to-python converter
   p::to_python_converter<
     QString,
-    QString_to_python_str>();
- 
+    QString_to_PythonStr>();
+
+  p::to_python_converter<
+    std::vector<SignalGenerator>,
+    Vector_to_PythonList<SignalGenerator> >();
+
+  p::to_python_converter<
+    std::vector<uint8_t>,
+    Vector_to_PythonList<uint8_t> >();
+
   // register the from-python converter
-  QString_from_python_str();
+  QString_from_PythonStr();
 }

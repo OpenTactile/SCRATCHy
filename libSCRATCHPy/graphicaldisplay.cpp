@@ -1,7 +1,5 @@
 #include "scratchpy.h"
 
-#include <scratchy/graphicaldisplay.h>
-
 void export_graphical_display() {
 
     void (GraphicalDisplay::*show1)(Icon, const std::string&, const std::string&) = &GraphicalDisplay::show;

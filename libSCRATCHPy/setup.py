@@ -7,11 +7,11 @@ SCRATCHPy = Extension('SCRATCHPy',
                     include_dirs = ['/usr/include/python3.6m', '/usr/include/qt/', '/usr/include/qt/QtCore', '../libSCRATCHy/'],
                     sources = [
                     'scratchpy.cpp', 'graphicaldisplay.cpp',
-                    'signalgenerator.cpp',# 'signalmanager.cpp',
+                    'signalgenerator.cpp', 'signalmanager.cpp',
                     'converters.cpp'],
                     library_dirs=[ '../build-libSCRATCHy/' ],
                     libraries = ['boost_python3', 'SCRATCHy'],
-		    extra_compile_args=['-std=c++11'])
+                    extra_compile_args=['-std=c++11'])
 
 setup (name = 'SCRATCHPy Interface',
        version = '.1',

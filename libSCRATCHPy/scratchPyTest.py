@@ -14,4 +14,8 @@ generator = scratchy.SignalGenerator(10)
 status = generator.status()
 print('Status: {}'.format(status))
 
+manager = scratchy.SignalManager()
+boards = manager.scanDevices()
+print('Boards: {}'.format(boards))
+
 #time.sleep(5)
