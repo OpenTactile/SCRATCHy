@@ -8,7 +8,7 @@ SCRATCHPy = Extension('SCRATCHPy',
                     sources = [
                     'scratchpy.cpp', 'graphicaldisplay.cpp',
                     'signalgenerator.cpp', 'signalmanager.cpp',
-                    'converters.cpp'],
+                    'converters.cpp', 'datatypes.cpp'],
                     library_dirs=[ '../build-libSCRATCHy/' ],
                     libraries = ['boost_python3', 'SCRATCHy'],
                     extra_compile_args=['-std=c++11'])

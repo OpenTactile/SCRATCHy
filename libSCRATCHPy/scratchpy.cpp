@@ -6,4 +6,5 @@ BOOST_PYTHON_MODULE(SCRATCHPy)
     export_graphical_display();
     export_signal_generator();
     export_signal_manager();
+    export_datatypes();
 }

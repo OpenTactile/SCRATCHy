@@ -13,5 +13,6 @@ void initialize_converters();
 void export_graphical_display();
 void export_signal_generator();
 void export_signal_manager();
+void export_datatypes();
 
 #endif // SCRATCHPY_H

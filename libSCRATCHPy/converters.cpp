@@ -1,5 +1,7 @@
 #include "scratchpy.h"
 
+#include "containerwrapper.h"
+
 #include <vector>
 #include <QString>
 
@@ -113,9 +115,9 @@ void initialize_converters()
     QString,
     QString_to_PythonStr>();
 
-  p::to_python_converter<
-    std::vector<SignalGenerator>,
-    Vector_to_PythonList<SignalGenerator> >();
+//  p::to_python_converter<
+//    std::vector<SignalGenerator>,
+//    Vector_to_PythonList<SignalGenerator> >();
 
   p::to_python_converter<
     std::vector<uint8_t>,
