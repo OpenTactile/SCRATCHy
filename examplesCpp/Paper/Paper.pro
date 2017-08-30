@@ -14,6 +14,7 @@ TEMPLATE = app
 SOURCES += main.cpp
 
 INCLUDEPATH += /usr/include/scratchy
-LIBS += -lSCRATCHy
+INCLUDEPATH += /usr/include/itchy
+LIBS += -lSCRATCHy -lITCHy
 
 

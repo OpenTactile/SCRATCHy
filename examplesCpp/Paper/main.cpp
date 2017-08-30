@@ -1,4 +1,5 @@
 #include <scratchy>
+#include <itchy>
 
 int main(int argc, char *argv[]) {
     GraphicalDisplay display;
@@ -7,7 +8,7 @@ int main(int argc, char *argv[]) {
     display.detach();
 
     FrequencyTable data;
-    ConstantVelocityQuery itchy;
+    TactileMouseQuery itchy;
     SignalManager controller;
     controller.initializeBoards();
 
