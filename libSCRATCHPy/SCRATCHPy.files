@@ -2,9 +2,9 @@ containerwrapper.h
 converters.cpp
 datatypes.cpp
 graphicaldisplay.cpp
-scratchPyTest.py
 scratchpy.cpp
 scratchpy.h
+scratchpytest.py
 setup.py
 signalgenerator.cpp
 signalmanager.cpp
