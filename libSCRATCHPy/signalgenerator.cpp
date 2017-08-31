@@ -2,6 +2,10 @@
 
 #include <scratchy/signalgenerator.h>
 
+std::string reprSignalGenerator(SignalGenerator const& gen) {
+    return std::string("<SignalGenerator(Address: ") + std::to_string(gen.address()) + ")>";
+}
+
 void export_signal_generator() {
     p::enum_<SystemStatus>("SystemStatus")
             .value("Operational", SystemStatus::Operational)
@@ -30,5 +34,6 @@ void export_signal_generator() {
             .def("send", send1)
             .def("send", send2)
             .def("send", send3)
-            .def("shutdown", &SignalGenerator::shutdown);
+            .def("shutdown", &SignalGenerator::shutdown)
+            .def("__repr__", reprSignalGenerator);
 }

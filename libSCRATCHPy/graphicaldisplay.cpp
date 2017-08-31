@@ -5,12 +5,12 @@ void export_graphical_display() {
     void (GraphicalDisplay::*show1)(Icon, const std::string&, const std::string&) = &GraphicalDisplay::show;
     void (GraphicalDisplay::*show2)(Icon, const std::string&, float) = &GraphicalDisplay::show;
 
-    p::scope in_GraphicalDisplay =  p::class_<GraphicalDisplay>("GraphicalDisplay")
-                                        .def("isPressed",&GraphicalDisplay::isPressed)
-                                        .def("clear",&GraphicalDisplay::clear)
-                                        .def("show",show1)
-                                        .def("show",show2)
-                                        .def("text", &GraphicalDisplay::text);
+    p::class_<GraphicalDisplay>("GraphicalDisplay")
+            .def("isPressed",&GraphicalDisplay::isPressed)
+            .def("clear",&GraphicalDisplay::clear)
+            .def("show",show1)
+            .def("show",show2)
+            .def("text", &GraphicalDisplay::text);
 
     p::enum_<Icon>("Icon")
             .value("None",Icon::None)

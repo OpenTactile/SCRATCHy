@@ -24,19 +24,23 @@ struct std_idx
         else IndexError();
     }
 
+    //operator== would need to be implemented for V
 //    static bool in(T const& x, V const& v)
 //    {
 //            return std::find(x.begin(), x.end(), v) != x.end();
 //    }
 
-//    static p::str repr(T const& x)
-//    {
-//        p::str res = "[ ";
-
-//        for(V elem : x) {
-//            res += elem
-//        }
-//    }
+    static p::str repr(T const& x)
+    {
+        p::str res = "[";
+        for (auto it = x.begin(); it != x.end(); ++it){
+            if(it != x.begin())
+                res += ", ";
+            res += p::str(*it);
+        }
+        res +=  "]";
+        return res;
+    }
 
 protected:
     static void IndexError() { PyErr_SetString(PyExc_IndexError, "Index out of range"); }
@@ -68,7 +72,7 @@ constexpr p::scope wrap_idx_container(char const* name) {
               p::with_custodian_and_ward<1,2>()) // to let container keep value
         .def("__iter__", p::iterator<T>())
 //        .def("__contains__", &std_idx<T>::in)
-//        .def("__repr__", )
+        .def("__repr__", &std_idx<T>::repr)
         ;
 }
 
@@ -86,7 +90,7 @@ constexpr p::scope wrap_list_container(char const* name) {
         .def("__delitem__", &std_list<T>::del)
         .def("__iter__", p::iterator<T>())
 //        .def("__contains__", &std_list<T>::in)
-//        .def("__repr__", )
+        .def("__repr__", &std_list<T>::repr)
         ;
 }
 
