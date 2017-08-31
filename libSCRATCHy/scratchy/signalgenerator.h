@@ -5,8 +5,12 @@
 #include <array>
 template<int Q>
 struct fixed_t {
-    fixed_t(float v = 0.0f) { value = static_cast<uint16_t>(v * (1 << Q)); }
-    fixed_t(double v) { value = static_cast<uint16_t>(v * (1 << Q)); }
+    fixed_t(float v = 0.0f) { setValue(v); }
+    fixed_t(double v) { setValue(v); }
+
+    template<typename T>
+    inline void setValue(T v) { value = static_cast<uint16_t>(v * (1 << Q)); }
+
     operator float() const { return value / static_cast<float>(1 << Q); }
     uint16_t value;
 };
@@ -16,8 +20,8 @@ using fixed_q15 = fixed_t<15>;
 
 struct FrequencyTable
 {
-    std::array<fixed_q5, 10> frequency;
-    std::array<fixed_q15, 10> amplitude;
+    std::array<fixed_q5, 10> frequency{};
+    std::array<fixed_q15, 10> amplitude{};
 };
 
 enum class SystemStatus
