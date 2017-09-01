@@ -21,6 +21,9 @@ class TestDisplay(unittest.TestCase):
         time.sleep(interactive_wait)
         self.display.show(scratchy.Icon.Pulse,"Hello",12.5)
 
+    def test_detach(self):
+        self.display.detach()
+
     def test_buttons(self):
         self.assertEqual(self.display.isPressed(scratchy.Button.Back), False)
         self.assertEqual(self.display.isPressed(scratchy.Button.Up), False)
