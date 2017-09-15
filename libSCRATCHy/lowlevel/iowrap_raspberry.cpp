@@ -1,4 +1,4 @@
-#include "iowrap.h"
+#include "scratchy/iowrap.h"
 #include <wiringPi.h>
 //#include <wiringPiSPI.h>
 #include <bcm2835.h>
@@ -10,6 +10,10 @@
 
 #include <iostream>
 extern "C" {
+    //Maybe we should use i2c bindings from bcm2835 directly???
+
+    //Definition within kernel headers...
+    #include <linux/i2c.h>
     #include <linux/i2c-dev.h>
 }
 #include <unistd.h>
@@ -155,14 +159,15 @@ namespace IO
     }
 
     int i2cCnt = 0;
-    int i2cFd;
+//    int i2cFd;
 
     void I2CInit() //
     {
         if (i2cCnt == 0)
         {
-            i2cFd = open("/dev/i2c-1",O_RDWR);
-            assert(i2cFd >= 0);
+//            i2cFd = open("/dev/i2c-1",O_RDWR);
+//            assert(i2cFd >= 0);
+            assert(bcm2835_i2c_begin() == 1);
         }
         i2cCnt++;
     }
@@ -172,8 +177,7 @@ namespace IO
         assert(i2cCnt > 0);
         if (i2cCnt == 1)
         {
-            int res = close(i2cFd);
-            assert(res >= 0);
+            bcm2835_i2c_end();
         }
         i2cCnt--;
     }
@@ -181,36 +185,58 @@ namespace IO
     bool I2CSetAddress(int address)
     {
         assert(i2cCnt > 0);
-        int res = ioctl(i2cFd, I2C_SLAVE, address);
-        return res >= 0;
+//        int res = ioctl(i2cFd, I2C_SLAVE, address);
+//        return res >= 0;
+        bcm2835_i2c_setSlaveAddress(address);
+        return true;
     }
 
     char I2CReadByte(int cmd)
     {
         assert(i2cCnt > 0);
-        int res = i2c_smbus_read_byte_data(i2cFd, cmd);
-        return static_cast<char>(res);
+//        int res = i2c_smbus_read_byte_data(i2cFd, cmd);
+//        return static_cast<char>(res);
+        char res;
+//        assert(bcm2835_i2c_write_read_rs((char*) &cmd, sizeof(int), &res, 1) == BCM2835_I2C_REASON_OK);
+        assert(bcm2835_i2c_write((char*) &cmd, sizeof(int)) == BCM2835_I2C_REASON_OK);
+        assert(bcm2835_i2c_read(&res, 1) == BCM2835_I2C_REASON_OK);
+        return res;
     }
 
     bool I2CWriteByte(int cmd, unsigned char buffer)
     {
         assert(i2cCnt > 0);
-        int res = i2c_smbus_write_byte_data(i2cFd, cmd, buffer);
-        return res >= 0;
+//        int res = i2c_smbus_write_byte_data(i2cFd, cmd, buffer);
+//        return res >= 0;
+        if(bcm2835_i2c_write((char*) &cmd, sizeof(int)) != BCM2835_I2C_REASON_OK)
+            return false;
+        if(bcm2835_i2c_write((const char*) &buffer, 1) != BCM2835_I2C_REASON_OK)
+            return false;
+        return true;
     }
 
     bool I2CReadBlock(int cmd, uint16_t length, unsigned char *buffer)
     {
         assert(i2cCnt > 0);
-        int res = i2c_smbus_read_i2c_block_data(i2cFd, cmd, length, buffer);
-        return res >= 0;
+//        int res = i2c_smbus_read_i2c_block_data(i2cFd, cmd, length, buffer);
+//        return res >= 0;
+        if (bcm2835_i2c_write((char*) &cmd, sizeof(int)) != BCM2835_I2C_REASON_OK)
+            return false;
+        if (bcm2835_i2c_read((char *) buffer, length) != BCM2835_I2C_REASON_OK)
+            return false;
+//        assert(bcm2835_i2c_write_read_rs((char*) &cmd, sizeof(int), buffer, length) == BCM2835_I2C_REASON_OK);
+        return true;
     }
 
     bool I2CWriteBlock(int cmd, uint16_t length, const unsigned char* buffer)
     {
         assert(i2cCnt > 0);
-        int res = i2c_smbus_write_i2c_block_data(i2cFd, cmd, length, buffer);
-        return res >= 0;
+//        int res = i2c_smbus_write_i2c_block_data(i2cFd, cmd, length, buffer);
+        if(bcm2835_i2c_write((char*) &cmd, sizeof(int)) != BCM2835_I2C_REASON_OK)
+            return false;
+        if(bcm2835_i2c_write((const char *)buffer, length) != BCM2835_I2C_REASON_OK)
+            return false;
+        return true;
     }
 
 }

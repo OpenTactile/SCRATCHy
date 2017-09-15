@@ -13,6 +13,11 @@ CONFIG  += c++11
 # thus allowing to use it on a standard pc.
 #CONFIG += fake
 
+# Problem with i2c library...
+#INCLUDEPATH += /usr/lib/modules/4.9.50-1-ARCH/build/include/
+#INCLUDEPATH += /usr/lib/modules/4.9.50-1-ARCH/build/arch/arm/include/
+#INCLUDEPATH += /usr/lib/modules/4.9.50-1-ARCH/build/arch/arm/include/generated/
+
 INSTALL_PATH_LIB = /usr/lib
 INSTALL_PATH_INCLUDE = /usr/include/scratchy
 
@@ -41,6 +46,7 @@ fake {
 !fake {
     SOURCES += lowlevel/iowrap_raspberry.cpp
     QMAKE_CXXFLAGS_RELEASE += -O3
+    QMAKE_CXXFLAGS += -fPIC
 }
 
 HEADERS +=\
@@ -60,7 +66,7 @@ HEADERS +=\
     scratchy/scratchy
 
 
-LIBS += -lusb -latomic
+LIBS += -lusb -latomic -lbcm2835
 
 !fake {
     LIBS += -lwiringPi -lbcm2835
