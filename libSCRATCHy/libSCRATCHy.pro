@@ -63,7 +63,7 @@ HEADERS +=\
 LIBS += -lusb -latomic
 
 !fake {
-    LIBS += -lwiringPi -lbcm2835
+    LIBS += -lwiringPi -li2c -lbcm2835
 }
 
 RESOURCES += \

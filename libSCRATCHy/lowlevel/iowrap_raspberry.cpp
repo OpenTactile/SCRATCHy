@@ -1,4 +1,4 @@
-#include "iowrap.h"
+#include "scratchy/iowrap.h"
 #include <wiringPi.h>
 //#include <wiringPiSPI.h>
 #include <bcm2835.h>
@@ -11,6 +11,7 @@
 #include <iostream>
 extern "C" {
     #include <linux/i2c-dev.h>
+    #include <i2c/smbus.h>
 }
 #include <unistd.h>
 #include <sys/ioctl.h>
