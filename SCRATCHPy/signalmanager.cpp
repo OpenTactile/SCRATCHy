@@ -1,12 +1,15 @@
 #include "scratchpy.h"
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SignalManager_initializeBoards_overloads, SignalManager::initializeBoards, 0, 2)
+
 void export_signal_manager() {
 
     void (SignalManager::*reset1)() = &SignalManager::reset;
     void (SignalManager::*reset2)(uint8_t) = &SignalManager::reset;
 
     p::class_<SignalManager>("SignalManager")
-            .def("initializeBoards", &SignalManager::initializeBoards)
+            .def("initializeBoards", &SignalManager::initializeBoards,
+                 SignalManager_initializeBoards_overloads())
             .def("scanDevices", &SignalManager::scanDevices)
             .def("reset",reset1)
             .def("reset",reset2)
