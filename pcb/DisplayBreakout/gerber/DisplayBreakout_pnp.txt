@@ -1,0 +1,30 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=DisplayBreakout
+*Date=08:20:48
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;10k;0805 [SMD];12.2394;-15.235;0;Top;R2
+2;;THT;5.64444;-19.68;0;Bottom;Com
+3;;[THT];36.6843;-5.42019;180;Bottom;Down
+4;;;59.3036;-20.7718;-90;Bottom;IMG1
+5;;;10.7243;-20.315;0;Bottom;Via3
+6;;[THT];36.6843;-14.3102;0;Bottom;Up
+7;10k;0805 [SMD];12.2394;-17.775;0;Top;R1
+8;;;31.6655;-10.1582;0;Bottom;Via1
+9;;[THT];23.9843;-9.86519;0;Bottom;Back
+10;;;13.2502;-5.71913;0;Bottom;Via4
+11;10k;0805 [SMD];12.2394;-10.155;0;Top;R4
+12;;[THT];49.3843;-9.86519;0;Bottom;Select
+13;;;29.7743;-31.11;0;Bottom;Via2
+14;10k;0805 [SMD];12.2394;-12.695;0;Top;R3
+15;;;36.1244;-19.68;0;Bottom;OLED
