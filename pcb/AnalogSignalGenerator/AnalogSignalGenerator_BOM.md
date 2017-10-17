@@ -29,7 +29,7 @@
 |2| Stacking Header, 2x20 Pins, Extra Tall | 1979 | (Adafruit) | 2.50 € |
 |2| Operational Amplifier, TLC084AID | TLC084AID | 1459730 | 3.41 € |
 |1| AND Gate, 8 inputs, CD4081BM96 | CD4081BM96 | 2407128 | 0.35 € |
-|2| Digital Comparator 8-bit, 74HC688 | CD74HC688E | 1740256 | 1.73 € |
+|2| Digital Comparator 8-bit, 74HCT688 | CD74HCT688E | 2407104 | 0.81 € |
 |2| Teensy 3.2 USB Dev. Board | Teensy 3.2 | (PJRC) | 16.84 € |
 |4| Low Profile Socket Strip, 14 Pins | SLW-114-01-G-S | 1668104 | 2.60 € |
 |2| Dip Switch, 8 Switches | 76SB08T | 9479180 | 1.27 € |
@@ -42,4 +42,4 @@
 |16| Resistor, 10 kOhm | ERJ6GEYJ103V | 2057719 | 0.02 € |
 |8| Capacitor, 10 nF | C2012C0G1E103J060AA | 2526251 | 0.22 € |
 |8| Capacitor, 15 nF | C2012C0G1H153J085AA | 1907326 | 0.31 € |
-|||| *Total Cost* | *77.41 €* |
+|||| *Total Cost* | *76.49 €* |
