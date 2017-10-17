@@ -6,6 +6,7 @@ void export_graphical_display() {
     void (GraphicalDisplay::*show2)(Icon, const std::string&, float) = &GraphicalDisplay::show;
 
     p::class_<GraphicalDisplay>("GraphicalDisplay")
+            .def("detach",&GraphicalDisplay::detach)
             .def("isPressed",&GraphicalDisplay::isPressed)
             .def("clear",&GraphicalDisplay::clear)
             .def("show",show1)
