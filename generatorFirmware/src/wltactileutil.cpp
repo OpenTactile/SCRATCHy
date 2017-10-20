@@ -636,7 +636,7 @@ void wlTactileUtil::R1_PrepareDMATest()
     crcDMASize = 128;
     crcDMA = new volatile unsigned char[crcDMASize];
 
-    for(int n = 0; n < crcDMASize; n++)
+    for(unsigned int n = 0; n < crcDMASize; n++)
         crcDMA[n] = 0;
 
     initSPI2DMA(crcDMA, crcDMASize);

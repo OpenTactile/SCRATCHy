@@ -1,10 +1,8 @@
 #ifndef WLTACTILEUTIL_H
 #define WLTACTILEUTIL_H
 
-
 #include "WProgram.h"
 #include "DMAChannel.h"
-
 
 #include <i2c_t3.h>
 #include <core_pins.h>
@@ -117,15 +115,15 @@ public:
     void R4_Idle();
     void Rp_Idle();
 
+    // Returns the CRC32 checksum of 'crcDMA'
     unsigned long checkCRC32();
 
-    volatile unsigned char * volatile  requestDMABuffer(unsigned int bufferSize);
+    volatile unsigned char * volatile requestDMABuffer(unsigned int bufferSize);
 
     void init(void(*loop)());
 
     void initSPI2DMA(volatile unsigned char * volatile dmaMemory, unsigned int dmaMemoryLength);
     void initI2C(unsigned int address);
-
 
     inline void analogOut(unsigned char output, int value)
     {        
@@ -202,23 +200,19 @@ public:
         switch(PWMOut[OUT])
         {
           case FTM0_CH4_PIN: // PTD4, FTM0_CH4
-            FTM0_C4V = ((uint32_t)value * (uint32_t)(FTM0_MOD + 1)) >> (uint32_t)BITS;
-            // FTM_PINCFG(FTM0_CH4_PIN) = CORE_PIN6_CONFIG
+            FTM0_C4V = ((uint32_t)value * (uint32_t)(FTM0_MOD + 1)) >> (uint32_t)BITS;            
             CORE_PIN6_CONFIG = PORT_PCR_MUX(4) | PORT_PCR_DSE | PORT_PCR_SRE;
             break;
           case FTM0_CH7_PIN: // PTD7, FTM0_CH7
-            FTM0_C7V = ((uint32_t)value * (uint32_t)(FTM0_MOD + 1)) >> (uint32_t)BITS;
-            // FTM_PINCFG(FTM0_CH7_PIN) =
+            FTM0_C7V = ((uint32_t)value * (uint32_t)(FTM0_MOD + 1)) >> (uint32_t)BITS;            
             CORE_PIN5_CONFIG = PORT_PCR_MUX(4) | PORT_PCR_DSE | PORT_PCR_SRE;
             break;
           case FTM1_CH0_PIN: // PTA12, FTM1_CH0
-            FTM1_C0V = ((uint32_t)value * (uint32_t)(FTM1_MOD + 1)) >> (uint32_t)BITS;
-            // FTM_PINCFG(FTM1_CH0_PIN)
+            FTM1_C0V = ((uint32_t)value * (uint32_t)(FTM1_MOD + 1)) >> (uint32_t)BITS;            
             CORE_PIN3_CONFIG = PORT_PCR_MUX(3) | PORT_PCR_DSE | PORT_PCR_SRE;
             break;
           case FTM1_CH1_PIN: // PTA13, FTM1_CH1
-            FTM1_C1V = ((uint32_t)value * (uint32_t)(FTM1_MOD + 1)) >> (uint32_t)BITS;
-            // FTM_PINCFG(FTM1_CH1_PIN)
+            FTM1_C1V = ((uint32_t)value * (uint32_t)(FTM1_MOD + 1)) >> (uint32_t)BITS;            
             CORE_PIN4_CONFIG = PORT_PCR_MUX(3) | PORT_PCR_DSE | PORT_PCR_SRE;
             break;
         }
@@ -242,13 +236,11 @@ private:
     const char AnalogIn[4] = {14, 15, 16, 17};
     const char HeatIn = 20;
 
-
     wlTactileUtil() { targetDMA = nullptr; }
     wlTactileUtil(const wlTactileUtil&);
     wlTactileUtil& operator = (const wlTactileUtil&);
 
     void mainLoop();
-
 
     char status;
     char raisePanic;
@@ -270,7 +262,6 @@ private:
 
     volatile unsigned char * volatile targetDMA; unsigned int targetDMASize;
     volatile unsigned char * volatile crcDMA; unsigned int crcDMASize;
-
 
     void setLED(SystemLED led, bool value);
 };
