@@ -9,9 +9,9 @@ This repository contains the following parts that reflect the folder structure:
   * `./SCRATCHPy/` &rarr; Python wrapper covering the high-level functionality of libSCRATCHy
   * `./examplesCpp/` &rarr; Example programs using the C++ interface
   * `./examplesPython/` &rarr; Example programs using the Python interface
+  * `./generatorFirmware/` &rarr; Signal Generator "operating system"
 
-There are still some parts missing that are currently under development and will be available soon:
-  * Signal Generator firmware
+There are still some parts missing that are currently under development and will be available soon:  
   * *ScratchyShow* graphical interface to libSCRATCHy ([separate respository](https://github.com/OpenTactile/ScratchyShow))
   * [Raspberry Pi 3](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) compatible SD Card image (will be hosted in separate repository due to its size)
 
@@ -49,12 +49,26 @@ This board is needed for low-pass filtering the high voltage signals coming from
 
 
 ## Programming the Signal Generators
+Before the Teensy can be flashed, please install Teensyduino by following the [official instructions](https://www.pjrc.com/teensy/td_download.html). Afterwards, building and flashing the firmware is straightforward:
+
+```shell
+cd generatorFirmware
+make
+```
+If the build process was successfull, you can install the firmware by connecting the Teensy (separate it from the SG board before!) via USB and running
+
+```shell
+make upload
+```
 
 ## Building and installing libraries & dependencies
+*TODO*
 
 ## First steps in using libSCRATCHy
+*TODO*
 
 ## Interfacing with Python
+*TODO*
 
 # License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
