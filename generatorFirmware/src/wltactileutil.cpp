@@ -3,10 +3,8 @@
 
 #define HWSERIAL         Serial
 #define BAUDRATE         9600
-//#define NORMAL_MODE
-#define LATERAL_MODE
-//#define DEBUG
 
+//#define DEBUG
 
 // Restart Teensy: https://forum.pjrc.com/threads/24304-_reboot_Teensyduino()-vs-_restart_Teensyduino()?p=35985&viewfull=1#post35985
 #define RESTART_ADDR       0xE000ED0C
@@ -117,7 +115,6 @@ void wlTactileUtil::init(void(*loop)())
 
     currentRunlevel = 255;
 
-
 #ifdef DEBUG
     HWSERIAL.print("dmaAddress#2: ");
     HWSERIAL.println((unsigned int)(&targetDMA[0]), HEX);
@@ -131,28 +128,29 @@ void wlTactileUtil::init(void(*loop)())
 void wlTactileUtil::initSPI2DMA(volatile unsigned char * volatile dmaMemory, unsigned int dmaMemoryLength)
 {
     dma1.disable();
+
     delay(1000);
     if(!spiInitialized)
     {
-        SIM_SCGC6 |= SIM_SCGC6_SPI0;	// enable clock to SPI.
+        SIM_SCGC6 |= SIM_SCGC6_SPI0;
         delay(1000);
-        SPI0_MCR = SPI_MCR_HALT;// | SPI_MCR_MDIS;//stop and reset complete MCR register and set slave
-        SPI0_MCR |= SPI_MCR_DIS_RXF | SPI_MCR_DIS_TXF;//disable fifo's
-        SPI0_CTAR0_SLAVE = 0;//dspi clock and transfer register set defaults
-        SPI0_CTAR0_SLAVE |= SPI_CTAR_FMSZ(8 - 1);//set 8 Bits per Package
-        SPI0_CTAR0_SLAVE = (SPI0_CTAR0_SLAVE & ~(SPI_CTAR_CPOL));//set SPI-DataMode 1
-        SPI0_RSER = SPI_RSER_TFFF_DIRS | SPI_RSER_TFFF_RE | // transmit fifo fill flag
-                        SPI_RSER_RFDF_DIRS | SPI_RSER_RFDF_RE;  // receive fifo drain flag
-        CORE_PIN13_CONFIG = PORT_PCR_MUX(2);//SCK is default pin
-        CORE_PIN11_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2);//MOSI is default pin
-        CORE_PIN12_CONFIG = PORT_PCR_MUX(2);//MISO is default pin
-        CORE_PIN10_CONFIG = PORT_PCR_MUX(2);//CS is default pin(CS0)
-        SPI0_MCR &= ~SPI_MCR_HALT; //start
+        SPI0_MCR = SPI_MCR_HALT;// | SPI_MCR_MDIS;
+        SPI0_MCR |= SPI_MCR_DIS_RXF | SPI_MCR_DIS_TXF;  // Disable FIFOs
+        SPI0_CTAR0_SLAVE = 0;
+        SPI0_CTAR0_SLAVE |= SPI_CTAR_FMSZ(8 - 1);       // 8bit Mode
+        SPI0_CTAR0_SLAVE = (SPI0_CTAR0_SLAVE & ~(SPI_CTAR_CPOL)); // SPI Mode 1
+        SPI0_RSER = SPI_RSER_TFFF_DIRS | SPI_RSER_TFFF_RE |
+                        SPI_RSER_RFDF_DIRS | SPI_RSER_RFDF_RE;
+        // Configure muxes to use the right pins for SPI
+        CORE_PIN13_CONFIG = PORT_PCR_MUX(2);
+        CORE_PIN11_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2);
+        CORE_PIN12_CONFIG = PORT_PCR_MUX(2);
+        CORE_PIN10_CONFIG = PORT_PCR_MUX(2);
+        SPI0_MCR &= ~SPI_MCR_HALT; // Start
 
         dma1.source(SPI0_POPR);
     }
     dma1.destinationBuffer(dmaMemory, dmaMemoryLength);
-
 
 #ifdef DEBUG
     HWSERIAL.print("dmaAddress: ");
@@ -165,7 +163,7 @@ void wlTactileUtil::initSPI2DMA(volatile unsigned char * volatile dmaMemory, uns
 
     if(!spiInitialized)
     {
-        dma1.transferSize(1);//8 bit
+        dma1.transferSize(1); // 8bit
         dma1.triggerAtHardwareEvent(DMAMUX_SOURCE_SPI0_RX);
     }
     dma1.enable();
@@ -260,6 +258,7 @@ void receiveI2C(size_t len)
     HWSERIAL.print("\n\rI2C Received, length: ");
     HWSERIAL.println(len);
 #endif
+
     unsigned short command = -1;
     unsigned int payload = 0;
 
@@ -268,11 +267,11 @@ void receiveI2C(size_t len)
         command = Wire.readByte();
 
 #ifdef DEBUG
-        HWSERIAL.print("Command: ");
-        HWSERIAL.print(command, BIN);
-        HWSERIAL.print(" (");
-        HWSERIAL.print(command, HEX);
-        HWSERIAL.println(")");
+    HWSERIAL.print("Command: ");
+    HWSERIAL.print(command, BIN);
+    HWSERIAL.print(" (");
+    HWSERIAL.print(command, HEX);
+    HWSERIAL.println(")");
 #endif
     }
 
@@ -289,11 +288,11 @@ void receiveI2C(size_t len)
 
 
 #ifdef DEBUG
-        HWSERIAL.print("Payload: ");
-        HWSERIAL.print(payload, DEC);
-        HWSERIAL.print(" (");
-        HWSERIAL.print(payload, HEX);
-        HWSERIAL.println(")");
+    HWSERIAL.print("Payload: ");
+    HWSERIAL.print(payload, DEC);
+    HWSERIAL.print(" (");
+    HWSERIAL.print(payload, HEX);
+    HWSERIAL.println(")");
 #endif
     }
 
@@ -372,8 +371,8 @@ void wlTactileUtil::processCommand(unsigned short command, unsigned int payload)
             bool rightOne = false;
 
 #ifdef DEBUG
-        HWSERIAL.print("SCL is: ");
-        HWSERIAL.println(digitalRead(10));
+    HWSERIAL.print("SCL is: ");
+    HWSERIAL.println(digitalRead(10));
 #endif
             rightOne = (digitalRead(10) == LOW);
             if(rightOne)
@@ -467,10 +466,7 @@ volatile unsigned char * volatile wlTactileUtil::requestDMABuffer(unsigned int b
 {
 #ifdef DEBUG
     HWSERIAL.begin(BAUDRATE);
-#endif
-
-#ifdef DEBUG
-        HWSERIAL.println("DMA request");
+    HWSERIAL.println("DMA request");
 #endif
 
     if(targetDMA)
@@ -480,7 +476,7 @@ volatile unsigned char * volatile wlTactileUtil::requestDMABuffer(unsigned int b
     targetDMASize = bufferSize;
 
 #ifdef DEBUG
-        HWSERIAL.println("Initialized DMA buffer:");
+    HWSERIAL.println("Initialized DMA buffer:");
     HWSERIAL.print("dmaAddress: ");
     HWSERIAL.println((unsigned int)(&targetDMA[0]), HEX);
     HWSERIAL.print("dmaLength: ");
@@ -496,11 +492,10 @@ void wlTactileUtil::mainLoop()
     {
 
 #ifdef DEBUG
-        HWSERIAL.print("=== Runlevel is now: ");
-        HWSERIAL.print(currentRunlevel, DEC);
-        HWSERIAL.println(" ===");
+    HWSERIAL.print("=== Runlevel is now: ");
+    HWSERIAL.print(currentRunlevel, DEC);
+    HWSERIAL.println(" ===");
 #endif
-
         switch(currentRunlevel)
         {
         case 255:
@@ -527,22 +522,19 @@ void wlTactileUtil::mainLoop()
 
             setLED(0b1000);
             while(currentRunlevel == 0) delay(50);
-                //R0_Idle();
             break;
 
         case 1: // SPI test
             setLED(0b1100);
             //R2_SetDefaults(); // Without this, DMA fails? WHY???
             //R1_PrepareDMATest();
-            while(currentRunlevel == 1);
-
+            while(currentRunlevel == 1) delay(50);
             break;
 
         case 2: // Configuration
             setLED(0b1110);            
             R2_SetDefaults();            
             while(currentRunlevel == 2) delay(50);
-                //R2_Idle();
             break;
 
         case 3: // Signalloop
@@ -566,26 +558,13 @@ void wlTactileUtil::mainLoop()
                     dma1.destinationBuffer(targetDMA, targetDMASize);                                        
                 }
 #ifdef DEBUG
-        HWSERIAL.print(SPI0_POPR, DEC);
-        HWSERIAL.print(" -> ");
-        //asm volatile ("dsb");
-        HWSERIAL.print(*((unsigned short*)&targetDMA[0]), DEC);
-        HWSERIAL.print(" - ");
-        HWSERIAL.println(*((unsigned short*)&targetDMA[2]), DEC);
+    HWSERIAL.print(SPI0_POPR, DEC);
+    HWSERIAL.print(" -> ");
+    //asm volatile ("dsb");
+    HWSERIAL.print(*((unsigned short*)&targetDMA[0]), DEC);
+    HWSERIAL.print(" - ");
+    HWSERIAL.println(*((unsigned short*)&targetDMA[2]), DEC);
 #endif
-
-        // Removed due to SNR degradation
-        /*
-                r3Counter++;
-                if(r3Counter & 1024)
-                {
-                    r3Counter = 0;
-                    r3Before = r3Pos;
-                    r3Pos = (r3Pos - 1) % 4;
-                    digitalWriteFast(LEDOut[r3Before],LOW);
-                    digitalWriteFast(LEDOut[r3Pos],HIGH);
-                }
-        */
                 barrier = true;
             }
             R3_StopMainLoop();
@@ -626,8 +605,8 @@ void wlTactileUtil::R2_SetDefaults()
 {
     R2_SetPanicMask(0b1100);
     R2_SetDACResolution(9);
-    R2_SetSamplingRate(40);
-    //R2_SetSamplingRate(62);
+    R2_SetSamplingRate(40); // 25kHz default
+    //R2_SetSamplingRate(62); // 16kHz default
 }
 
 void wlTactileUtil::R2_SetSamplingRate(unsigned int samplingRate)
@@ -682,7 +661,6 @@ void wlTactileUtil::R3_StopMainLoop()
     resetVoltages();
 }
 
-
 void wlTactileUtil::setLED(char ledMask)
 {
     for(int n = 0; n < 4; n++)
@@ -698,7 +676,6 @@ void wlTactileUtil::setLED(SystemLED led, bool value)
 {
     digitalWrite(LEDOut[static_cast<int>(led)], value? HIGH : LOW);
 }
-
 
 void wlTactileUtil::thermalWarning()
 {
@@ -741,16 +718,9 @@ void wlTactileUtil::configError()
 
 void wlTactileUtil::resetVoltages()
 {
-#ifdef NORMAL_MODE
-    analogOutFast<0, 9>(32);
-    analogOutFast<1, 9>(32);
-    analogOutFast<2, 9>(32);
-    analogOutFast<3, 9>(32);
-#else
     analogOutQ15<0>(0);
     analogOutQ15<1>(0);
     analogOutQ15<2>(0);
     analogOutQ15<3>(0);
-#endif
 }
 

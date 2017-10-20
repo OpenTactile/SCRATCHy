@@ -3,9 +3,6 @@
 
 #include "costable_12bit.h"
 
-//#define NORMAL_MODE
-#define LATERAL_MODE
-
 typedef q15_t q5_t;
 
 #define float2q15(x) (q15_t(x*32768))
@@ -31,12 +28,12 @@ const byte frequenciesPerOutput = 10;
 
 struct actuatorConfiguration
 {
-  uint16_t frequency_q5[frequenciesPerOutput]; //   0 .. 1024 + 5 bit fractional
+  uint16_t frequency_q5[frequenciesPerOutput];  //    0 .. 1024 + 5 bit fractional
   uint16_t amplitude_q15[frequenciesPerOutput]; // -1.0 .. 1.0
 };
 
 volatile actuatorConfiguration* volatile actuators;
-const q15_t amplitudeClip = float2q15(0.95);
+
 q15_t actuatorPhase[outputCount][frequenciesPerOutput];
 
 inline q15_t frequency2increment(q5_t freq)
@@ -50,10 +47,10 @@ q5_t frequencyAverage[outputCount][frequenciesPerOutput] = {{float2q5(0.0)}};
 inline q15_t ema_15(q15_t in, q15_t avg)
 {
     // alpha = 0.03125: Approx 84.23Hz -3dB Cutoff frequency (for 16kHz sampling rate)
-    return avg - (avg >> 5) + (in >> 5);
+    //return avg - (avg >> 5) + (in >> 5);
 
     // alpha = 0.015625: Approx 62.66Hz -3dB Cutoff frequency (for 25kHz sampling rate)
-    //return avg - (avg >> 6) + (in >> 6);
+    return avg - (avg >> 6) + (in >> 6);
 }
 
 
@@ -88,40 +85,28 @@ void step()
         unsigned int table_index = phase >> (15 - sinTableResolution);
         q15_t cos_result = cos_table[table_index];
 
-#ifdef LATERAL_MODE
         phases[n] += mulQ15(cos_result, amplitude);
-#endif
 
-#ifdef NORMAL_MODE
-        const q15_t amplitudehalf = amplitude >> 1;
-        phases[n] += mulQ15(cos_result, amplitudehalf) + amplitudehalf;
-#endif
         actuatorPhase[n][m] = phase;
     }
   }
 
-  // Scale the -1.0 ... 1.0 range to -0.9375...0.9375 in order to reach the desired -240...240 output for pwm
-//  arm_scale_q15(&phases[0], amplitudeScale, 0, &phases[0], outputCount);
+  // Depending on the type of signal board, the maximum amplitude may be limited
+  // to a PWM value smaller than 1.0 (e. g. because of bootstrap capacitors of
+  // the HVA). This problem can be solved either on the MCU (software clipping)
+  // or by uncommenting one of the following blocks:
 
-#ifdef LATERAL_MODE
-  //for(int n = 0; n < 4; n++)
+  // Scale maximum PWM value
+  // const q15_t amplitudeScale = float2q15(0.95);
+  // arm_scale_q15(&phases[0], amplitudeScale, 0, &phases[0], outputCount);
+
+  // Clip maximum PWM value
+  // const q15_t amplitudeClip = float2q15(0.95);
+  // for(int n = 0; n < 4; n++)
   //    if(phases[n] > amplitudeClip)
   //        phases[n] = amplitudeClip;
 
   wlTactileUtil::instance().analogOutQ15(&phases[0]);
-#endif
-
-#ifdef NORMAL_MODE
-    const int shift = 32;
-    const int shiftPrec = 6;
-    arm_scale_q15(&phases[0], float2q15(0.9), 0, &phases[0], outputCount);
-
-
-    wlTactileUtil::instance().analogOutFast<0, 9>((int(phases[0]) >> shiftPrec) + shift);
-    wlTactileUtil::instance().analogOutFast<1, 9>((int(phases[1]) >> shiftPrec) + shift);
-    wlTactileUtil::instance().analogOutFast<2, 9>((int(phases[2]) >> shiftPrec) + shift);
-    wlTactileUtil::instance().analogOutFast<3, 9>((int(phases[3]) >> shiftPrec) + shift);
-#endif
 }
 
 extern "C" int main(void)

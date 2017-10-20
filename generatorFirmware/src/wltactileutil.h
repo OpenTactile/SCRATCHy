@@ -62,6 +62,8 @@ public:
         // reliable speed for SPI communication. Several packages of 1kByte
         // size are sent by the mainboard via SPI and a checksum (CRC32) is
         // requested. This test can be performed several times.
+        // FIXME: This code has not been tested yet
+        //        due to problems with resetting SPI communication
         FinishR1            = 0b00101111, // Advance to runlevel 2
         SPIPrepare          = 0b00100001,
         SPIChecksum         = 0b00100000, // Calculate and send back CRC32 checksum
@@ -95,7 +97,6 @@ public:
         // Runlevel -1:
         // Wait for wakeupcall from main board
         InitSystem          = 0b10101010
-
     };
 
     void Init_Idle();
@@ -130,7 +131,6 @@ public:
     {        
         analogWrite(PWMOut[output], value);
     }
-
 
     template<unsigned char OUT>
     inline void analogOutQ15(q15_t valueFixed)
@@ -229,7 +229,6 @@ public:
 
     void resetVoltages();
 
-
     void thermalWarning();
     void timeout();
     void configError();
@@ -237,8 +236,8 @@ public:
 
 private:
     const char PWMOut[4] = { 3,  4,  5,  6};
-    //const char LEDOut[4] = {9, 21, 22, 23}; // r1
-    const char LEDOut[4] = {23, 22, 21, 9}; // r2
+    //const char LEDOut[4] = {9, 21, 22, 23}; // Wiring for ASB
+    const char LEDOut[4] = {23, 22, 21, 9}; // Wiring for HVA
 
     const char AnalogIn[4] = {14, 15, 16, 17};
     const char HeatIn = 20;
