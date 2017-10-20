@@ -1,0 +1,7 @@
+teensy3
+src
+libraries/i2c_t3
+teensy3/avr
+teensy3/util
+.
+libraries/FastCRC
