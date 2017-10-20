@@ -187,46 +187,6 @@ void wlTactileUtil::Init_Idle()
     delay(30);
 }
 
-void wlTactileUtil::R0_Idle()
-{
-    digitalWrite(LEDOut[3],HIGH); // double pulse LED while waiting for I2C requests
-    delay(25);                      // if the LED stops the slave is probably stuck in an ISR
-    digitalWrite(LEDOut[3],LOW);
-    delay(100);
-    digitalWrite(LEDOut[3],HIGH);
-    delay(25);
-    digitalWrite(LEDOut[3],LOW);
-    delay(850);
-}
-
-
-void wlTactileUtil::R1_Idle()
-{
-    digitalWrite(LEDOut[3],HIGH);
-    digitalWrite(LEDOut[2],HIGH); // double pulse LED while waiting for I2C requests
-    delay(25);                      // if the LED stops the slave is probably stuck in an ISR
-    digitalWrite(LEDOut[2],LOW);
-    delay(100);
-    digitalWrite(LEDOut[2],HIGH);
-    delay(25);
-    digitalWrite(LEDOut[2],LOW);
-    delay(850);
-}
-
-void wlTactileUtil::R2_Idle()
-{
-    digitalWrite(LEDOut[3],HIGH);
-    digitalWrite(LEDOut[2],HIGH);
-    digitalWrite(LEDOut[1],HIGH); // double pulse LED while waiting for I2C requests
-    delay(25);                      // if the LED stops the slave is probably stuck in an ISR
-    digitalWrite(LEDOut[1],LOW);
-    delay(100);
-    digitalWrite(LEDOut[1],HIGH);
-    delay(25);
-    digitalWrite(LEDOut[1],LOW);
-    delay(850);
-}
-
 void wlTactileUtil::Rp_Idle()
 {
     setLED(0b0000);
@@ -347,7 +307,13 @@ void wlTactileUtil::processCommand(unsigned short command, unsigned int payload)
 #endif
         return;
     }
-    if(command == SystemRequest::Status) return;
+    if(command == SystemRequest::Status)
+    {
+#ifdef DEBUG
+    HWSERIAL.println("Status requested");
+#endif
+        return;
+    }
     if(command == SystemRequest::StatusReset)
     {
         status = 0;
@@ -423,12 +389,12 @@ void wlTactileUtil::processCommand(unsigned short command, unsigned int payload)
 
 void wlTactileUtil::processRequest()
 {
+    // The current status can be acquired at any time
     if(lastCommand == SystemRequest::Status)
     {        
         Wire.write(status);
         return;
     }
-
 
     switch(currentRunlevel)
     {
@@ -439,10 +405,6 @@ void wlTactileUtil::processRequest()
             Wire.write(&((byte*)(&crc))[0], 4);
             return;
         }
-        break;
-
-    case 5: // Recovery
-        // Not implemented yet
         break;
     }
 }
@@ -517,7 +479,6 @@ void wlTactileUtil::mainLoop()
 
             // Set SCL to INPUT
             pinMode(10, INPUT);
-
             initI2C(0);
 
             setLED(0b1000);
@@ -554,7 +515,6 @@ void wlTactileUtil::mainLoop()
                 // SPI Safety Reset
                 if(digitalReadFast(10) == HIGH)
                 {
-                    //asm volatile ("dsb");
                     dma1.destinationBuffer(targetDMA, targetDMASize);                                        
                 }
 #ifdef DEBUG

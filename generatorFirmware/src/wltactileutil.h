@@ -97,33 +97,23 @@ public:
         InitSystem          = 0b10101010
     };
 
+    // Some animations...
     void Init_Idle();
-    void R0_Idle();
+    void R4_Idle();
+    void Rp_Idle();
 
     void R1_PrepareDMATest();
-    void R1_Idle();
 
     void R2_SetDefaults();
     void R2_SetSamplingRate(unsigned int samplingRate);
     void R2_SetDACResolution(unsigned char dacBits);
     void R2_SetPanicMask(unsigned char mask);
-    void R2_Idle();
 
     void R3_StartMainLoop();
     void R3_StopMainLoop();
 
-    void R4_Idle();
-    void Rp_Idle();
-
-    // Returns the CRC32 checksum of 'crcDMA'
-    unsigned long checkCRC32();
-
     volatile unsigned char * volatile requestDMABuffer(unsigned int bufferSize);
-
     void init(void(*loop)());
-
-    void initSPI2DMA(volatile unsigned char * volatile dmaMemory, unsigned int dmaMemoryLength);
-    void initI2C(unsigned int address);
 
     inline void analogOut(unsigned char output, int value)
     {        
@@ -260,10 +250,18 @@ private:
 
     unsigned short lastCommand;
 
-    volatile unsigned char * volatile targetDMA; unsigned int targetDMASize;
-    volatile unsigned char * volatile crcDMA; unsigned int crcDMASize;
+    volatile unsigned char * volatile targetDMA;
+    unsigned int targetDMASize;
+
+
+    // Returns the CRC32 checksum of 'crcDMA'
+    unsigned long checkCRC32();
+    volatile unsigned char * volatile crcDMA;
+    unsigned int crcDMASize;
 
     void setLED(SystemLED led, bool value);
+    void initSPI2DMA(volatile unsigned char * volatile dmaMemory, unsigned int dmaMemoryLength);
+    void initI2C(unsigned int address);
 };
 
 #endif // WLTACTILEUTIL_H
