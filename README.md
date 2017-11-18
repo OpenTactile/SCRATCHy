@@ -11,10 +11,6 @@ This repository contains the following parts that reflect the folder structure:
   * `./examplesPython/` &rarr; Example programs using the Python interface
   * `./generatorFirmware/` &rarr; Signal Generator "operating system"
 
-There are still some parts missing that are currently under development and will be available soon:  
-  * *ScratchyShow* graphical interface to libSCRATCHy ([separate respository](https://github.com/OpenTactile/ScratchyShow))
-  * [Raspberry Pi 3](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) compatible SD Card image (will be hosted in separate repository due to its size)
-
 ## Assembling the hardware system
 The circuit boards located in the `./pcb/` folder have been designed with [Fritzing](http://fritzing.org/home/), an open source EDA software. For convenience, production ready [Extended Gerber](https://en.wikipedia.org/wiki/Gerber_format) files can be found in their respective subfolders.
 
@@ -61,8 +57,19 @@ If the build process was successfull, you can install the firmware by connecting
 make upload
 ```
 
-## Building and installing libraries & dependencies
-*TODO*
+## Dependencies
+
+## Building libSCRATCHy and SCRATCHPy
+
+#### Using *fake mode*
+If you intend to use libSCRATCHy on a personal computer (not using the Raspberry Pi 3), you may pass an additional configuration option to qmake that disables some platform specific tests at runtime
+
+```bash
+qmake ../ScratchyShow.pro CONFIG+=fake
+make && make install
+```
+This also causes the ``iowrap_dummy.cpp`` to be built instead of ``iowrap_raspberry.cpp``. By using *fake mode*, one can make use of the complete SCRATCHy API without triggering any hardware specific actions (e.g. GPIO access, I²C communication, etc.).
+
 
 ## First steps in using libSCRATCHy
 *TODO*
@@ -70,5 +77,190 @@ make upload
 ## Interfacing with Python
 *TODO*
 
-# License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+## API Reference
+
+### Highlevel API
+
+#### GraphicalDisplay
+
+`bool detach()`
+`bool isPressed(Button button)`
+
+`void clear()`
+`void show(Icon icon, const std::string& header, const std::string& body)`
+`void show(Icon icon, const std::string& header, float body)`
+`void text(const std::string& text)`
+
+#### SignalManager
+
+`bool initializeBoards(unsigned int dacResolution, unsigned int samplingTime)`
+
+`std::vector<uint8_t> scanDevices()`
+
+`void reset(uint8_t address)`
+
+`void reset()`
+
+`void initSystem()`
+
+`void assignAddresses()`
+`void gatherSPISpeed()`
+
+`void maskDevice(uint8_t address)`
+
+`std::vector<SignalGenerator>& generators()`
+`std::vector<uint8_t> addresses() const`
+
+`SignalGenerator& generator(uint8_t address)`
+
+#### SignalGenerator
+
+`uint8_t address() const`
+
+`SystemStatus status() const`
+`void resetStatus() const`
+`bool isAlive()`
+
+`void finishR0()`
+
+`bool spiCheck(uint16_t divider = 16) const`
+`void finishR1()`
+
+`void setDACResolution(uint8_t resolution)`
+`void setSamplingRate(uint32_t rate)`
+`void finishR2()`
+
+`void startSignalGeneration() const`
+`void send(const std::array<FrequencyTable, 4>& data)`
+`void send(const FrequencyTable& dataABCD)`
+`void send(const FrequencyTable& dataA, const FrequencyTable& dataB, const FrequencyTable& dataC, const FrequencyTable& dataD)`
+`void shutdown()`
+
+#### PositionQuery
+
+`virtual QVector2D position() const`
+
+`virtual QVector2D velocity() const`
+
+`virtual float orientation() const`
+`virtual float angularVelocity() const`
+
+`virtual bool buttonPressed() const`
+
+`virtual bool initialize()`
+
+`virtual void update()`
+
+`virtual void feedback(unsigned char r, unsigned char g, unsigned char b)`
+
+##### ConstantVelocityQuery
+
+##### MousePositionQuery
+
+### Lowlevel API
+All lowlevel functions can be accessed via the `iowrap.h` header file. The lowlevel API gives access to platformspecific functionality such as GPIO configuration, direct SPI communication as well as sending custom I²C commands to the SignalBoards.
+
+#### GPIO
+
+_ _ _
+
+`void GPIOSetDirection(unsigned int pin, GPIODirection direction)`
+
+_ _ _
+
+`void GPIOHigh(unsigned int pin)`
+
+_ _ _
+
+`void GPIOLow(unsigned int pin)`
+
+_ _ _
+
+`bool GPIOIsLow(unsigned int pin)`
+
+_ _ _
+
+`bool GPIOIsHigh(unsigned int pin)`
+
+_ _ _
+
+`void GPIOInit()`
+
+_ _ _
+
+`void GPIOFree()`
+
+_ _ _
+
+`void GPIOSetAddress(unsigned int address)`
+
+_ _ _
+
+`void GPIOSetBroadCast(bool value)`
+
+_ _ _
+
+
+#### SPI
+
+_ _ _
+
+`void SPIInit()`
+
+_ _ _
+
+`void SPIFree()`
+
+_ _ _
+
+`void SPISetDivider(unsigned int divider)`
+
+_ _ _
+
+`unsigned int SPIGetCurrentSpeed()`
+
+_ _ _
+
+`void SPISend(const uint16_t *data, int size)`
+
+
+_ _ _
+
+#### I²C
+
+_ _ _
+
+`void I2CInit()`
+
+
+_ _ _
+
+`void I2CFree()`
+
+
+_ _ _
+
+`bool I2CSetAddress(int address)`
+
+
+_ _ _
+
+`char I2CReadByte(int cmd)`
+
+
+_ _ _
+
+`bool I2CWriteByte(int cmd, unsigned char buffer)`
+
+
+_ _ _
+
+`bool I2CReadBlock(int cmd, uint16_t length, unsigned char *buffer)`
+
+
+_ _ _
+
+`bool I2CWriteBlock(int cmd, uint16_t length, const unsigned char* buffer)`
+
+
+_ _ _
