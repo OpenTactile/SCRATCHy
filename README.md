@@ -58,6 +58,17 @@ make upload
 ```
 
 ## Dependencies
+libSCRATCHy requires the following dependencies to be installed:
+- [Qt 5.9](https://www.qt.io/)
+- [libusb](http://libusb.info/)
+
+If the Raspberry Pi 3 is going to be used for the MCU (recommended), the following libraries need to be installed as well:
+- [Wiring Pi](http://wiringpi.com/)
+- [libbcm2835](http://www.airspayce.com/mikem/bcm2835/)
+
+SCRATCHPy, the python wrapper for libSCRATCHy, does need two more dependencies:
+- Python 3.6m
+- [Boost.Python](http://www.boost.org/doc/libs/1_65_1/libs/python/doc/html/index.html)
 
 ## Building libSCRATCHy and SCRATCHPy
 
@@ -78,80 +89,98 @@ This also causes the ``iowrap_dummy.cpp`` to be built instead of ``iowrap_raspbe
 *TODO*
 
 ## API Reference
+The SCRACTHy API is separated into two categories: High- and Lowlevel functionality.
+In the majority of cases, the Highlevel API should be sufficient to control the complete system. In case custom devices have been added to the bus-system, or if the SignalGenerators following a non-standard protocol, the Lowlevel API allows for direct access to GPIO, SPI and I²C.
 
 ### Highlevel API
 
 #### GraphicalDisplay
 
-`bool detach()`
-`bool isPressed(Button button)`
+##### `bool detach()`
 
-`void clear()`
-`void show(Icon icon, const std::string& header, const std::string& body)`
-`void show(Icon icon, const std::string& header, float body)`
-`void text(const std::string& text)`
+##### `bool isPressed(Button button)`
+
+##### `void clear()`
+
+##### `void show(Icon icon, const std::string& header, const std::string& body)`
+
+##### `void show(Icon icon, const std::string& header, float body)`
+
+##### `void text(const std::string& text)`
 
 #### SignalManager
 
-`bool initializeBoards(unsigned int dacResolution, unsigned int samplingTime)`
+##### `bool initializeBoards(unsigned int dacResolution, unsigned int samplingTime)`
 
-`std::vector<uint8_t> scanDevices()`
+##### `std::vector<uint8_t> scanDevices()`
 
-`void reset(uint8_t address)`
+##### `void reset(uint8_t address)`
 
-`void reset()`
+##### `void reset()`
 
-`void initSystem()`
+##### `void initSystem()`
 
-`void assignAddresses()`
-`void gatherSPISpeed()`
+##### `void assignAddresses()`
 
-`void maskDevice(uint8_t address)`
+##### `void gatherSPISpeed()`
 
-`std::vector<SignalGenerator>& generators()`
-`std::vector<uint8_t> addresses() const`
+##### `void maskDevice(uint8_t address)`
 
-`SignalGenerator& generator(uint8_t address)`
+##### `std::vector<SignalGenerator>& generators()`
+
+##### `std::vector<uint8_t> addresses() const`
+
+##### `SignalGenerator& generator(uint8_t address)`
 
 #### SignalGenerator
 
-`uint8_t address() const`
+##### `uint8_t address() const`
 
-`SystemStatus status() const`
-`void resetStatus() const`
-`bool isAlive()`
+##### `SystemStatus status() const`
 
-`void finishR0()`
+##### `void resetStatus() const`
 
-`bool spiCheck(uint16_t divider = 16) const`
-`void finishR1()`
+##### `bool isAlive()`
 
-`void setDACResolution(uint8_t resolution)`
-`void setSamplingRate(uint32_t rate)`
-`void finishR2()`
+##### `void finishR0()`
 
-`void startSignalGeneration() const`
-`void send(const std::array<FrequencyTable, 4>& data)`
-`void send(const FrequencyTable& dataABCD)`
-`void send(const FrequencyTable& dataA, const FrequencyTable& dataB, const FrequencyTable& dataC, const FrequencyTable& dataD)`
-`void shutdown()`
+##### `bool spiCheck(uint16_t divider = 16) const`
+
+##### `void finishR1()`
+
+##### `void setDACResolution(uint8_t resolution)`
+
+##### `void setSamplingRate(uint32_t rate)`
+
+##### `void finishR2()`
+
+##### `void startSignalGeneration() const`
+
+##### `void send(const std::array<FrequencyTable, 4>& data)`
+
+##### `void send(const FrequencyTable& dataABCD)`
+
+##### `void send(const FrequencyTable& dataA, [...], const FrequencyTable& dataD)`
+
+##### `void shutdown()`
 
 #### PositionQuery
 
-`virtual QVector2D position() const`
+##### `virtual QVector2D position() const`
 
-`virtual QVector2D velocity() const`
+##### `virtual QVector2D velocity() const`
 
-`virtual float orientation() const`
-`virtual float angularVelocity() const`
+##### `virtual float orientation() const`
 
-`virtual bool buttonPressed() const`
+##### `virtual float angularVelocity() const`
 
-`virtual bool initialize()`
+##### `virtual bool buttonPressed() const`
 
-`virtual void update()`
+##### `virtual bool initialize()`
 
-`virtual void feedback(unsigned char r, unsigned char g, unsigned char b)`
+##### `virtual void update()`
+
+##### `virtual void feedback(unsigned char r, unsigned char g, unsigned char b)`
 
 ##### ConstantVelocityQuery
 
@@ -162,105 +191,52 @@ All lowlevel functions can be accessed via the `iowrap.h` header file. The lowle
 
 #### GPIO
 
-_ _ _
+##### `void GPIOSetDirection(unsigned int pin, GPIODirection direction)`
 
-`void GPIOSetDirection(unsigned int pin, GPIODirection direction)`
+##### `void GPIOHigh(unsigned int pin)`
 
-_ _ _
+##### `void GPIOLow(unsigned int pin)`
 
-`void GPIOHigh(unsigned int pin)`
+##### `bool GPIOIsLow(unsigned int pin)`
 
-_ _ _
+##### `bool GPIOIsHigh(unsigned int pin)`
 
-`void GPIOLow(unsigned int pin)`
+##### `void GPIOInit()`
 
-_ _ _
+##### `void GPIOFree()`
 
-`bool GPIOIsLow(unsigned int pin)`
+##### `void GPIOSetAddress(unsigned int address)`
 
-_ _ _
-
-`bool GPIOIsHigh(unsigned int pin)`
-
-_ _ _
-
-`void GPIOInit()`
-
-_ _ _
-
-`void GPIOFree()`
-
-_ _ _
-
-`void GPIOSetAddress(unsigned int address)`
-
-_ _ _
-
-`void GPIOSetBroadCast(bool value)`
-
-_ _ _
+##### `void GPIOSetBroadCast(bool value)`
 
 
 #### SPI
 
-_ _ _
+##### `void SPIInit()`
 
-`void SPIInit()`
+##### `void SPIFree()`
 
-_ _ _
+##### `void SPISetDivider(unsigned int divider)`
 
-`void SPIFree()`
+##### `unsigned int SPIGetCurrentSpeed()`
 
-_ _ _
-
-`void SPISetDivider(unsigned int divider)`
-
-_ _ _
-
-`unsigned int SPIGetCurrentSpeed()`
-
-_ _ _
-
-`void SPISend(const uint16_t *data, int size)`
+##### `void SPISend(const uint16_t *data, int size)`
 
 
-_ _ _
 
 #### I²C
 
-_ _ _
 
-`void I2CInit()`
+##### `void I2CInit()`
 
+##### `void I2CFree()`
 
-_ _ _
+##### `bool I2CSetAddress(int address)`
 
-`void I2CFree()`
+##### `char I2CReadByte(int cmd)`
 
+##### `bool I2CWriteByte(int cmd, unsigned char buffer)`
 
-_ _ _
+##### `bool I2CReadBlock(int cmd, uint16_t length, unsigned char *buffer)`
 
-`bool I2CSetAddress(int address)`
-
-
-_ _ _
-
-`char I2CReadByte(int cmd)`
-
-
-_ _ _
-
-`bool I2CWriteByte(int cmd, unsigned char buffer)`
-
-
-_ _ _
-
-`bool I2CReadBlock(int cmd, uint16_t length, unsigned char *buffer)`
-
-
-_ _ _
-
-`bool I2CWriteBlock(int cmd, uint16_t length, const unsigned char* buffer)`
-
-
-_ _ _
+##### `bool I2CWriteBlock(int cmd, uint16_t length, const unsigned char* buffer)`
