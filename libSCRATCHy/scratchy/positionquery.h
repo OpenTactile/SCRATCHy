@@ -6,6 +6,8 @@
 /* interface */ class PositionQuery
 {
 public:
+    virtual ~PositionQuery() {}
+
     // Absolute position in meters
     virtual QVector2D position() const = 0;
 
