@@ -72,21 +72,51 @@ SCRATCHPy, the python wrapper for libSCRATCHy, does need two more dependencies:
 
 ## Building libSCRATCHy and SCRATCHPy
 
+libSCRATCHy uses the qmake build system and is available for linux platforms only. For building and installing the library system-wide, please follow these steps within the base directory:
+```bash
+mkdir libSCRATCHy-build
+cd libSCRATCHy-build
+qmake ../libSCRATCHy
+make && sudo make install
+```
 #### Using *fake mode*
 If you intend to use libSCRATCHy on a personal computer (not using the Raspberry Pi 3), you may pass an additional configuration option to qmake that disables some platform specific tests at runtime
 
 ```bash
-qmake ../ScratchyShow.pro CONFIG+=fake
-make && make install
+[...]
+qmake ../libSCRATCHy CONFIG+=fake
+make && sudo make install
 ```
 This also causes the ``iowrap_dummy.cpp`` to be built instead of ``iowrap_raspberry.cpp``. By using *fake mode*, one can make use of the complete SCRATCHy API without triggering any hardware specific actions (e.g. GPIO access, I²C communication, etc.).
 
 
 ## First steps in using libSCRATCHy
-*TODO*
+The directory `examplesCpp` contains a minimal example project that can be build using qmake:
+```bash
+mkdir minimalExample-build
+cd minimalExample-build
+qmake ../examplesCpp/minimalExample
+make
+./MinimalExample
+```
+Please make sure that libSCRATCHy as well as libITCHy has been build and installed beforehand.
+This application will output a frequency that is scaled with the current movement speed of the tactile mouse.
 
 ## Interfacing with Python
-*TODO*
+A python-based application equivalent to the C++ example can be found in the `examplesPython` directory.
+The python script `minimalExample.py` needs the python bindings of libSCRATCHy and libITCHy to be build.
+When running
+```bash
+python minimalExample.py
+```
+the application should do exactly the same as the C++ example.
+
+In case there are `ModuleNotFoundError` messages, please adjust the lines
+```python
+sys.path.append(os.path.abspath('../../SCRATCHPy/build/lib.linux-x86_64-3.6/'))
+sys.path.append(os.path.abspath('../../../ITCHy/ITCHPy/build/lib.linux-x86_64-3.6/'))
+```
+to match the actual build-path of the libraries.
 
 ## API Reference
 The SCRACTHy API is separated into two categories: High- and Lowlevel functionality.
