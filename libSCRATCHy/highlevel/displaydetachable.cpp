@@ -80,7 +80,7 @@ void DisplayDetachable::setIcon(Icon icon)
     if(!initialized) return;
 
     static QString resourceNames[19] = {
-        "none", "scratchy", "logo", "spectrum", "forbidden", "bolt", "bug", "check",
+        "none", "scratchy", "spectrum", "forbidden", "bolt", "bug", "check",
         "clock", "cog", "fire", "image", "reboot", "power", "pulse", "random",
         "warning", "wrench", "x"
     };

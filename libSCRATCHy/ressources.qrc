@@ -17,7 +17,6 @@
         <file>images/wrench.png</file>
         <file>images/x.png</file>
         <file>images/bolt.png</file>
-        <file>images/logo.png</file>
         <file>images/scratchy.png</file>
     </qresource>
 </RCC>

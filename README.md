@@ -116,7 +116,7 @@ In case there are `ModuleNotFoundError` messages, please adjust the lines
 sys.path.append(os.path.abspath('../../SCRATCHPy/build/lib.linux-x86_64-3.6/'))
 sys.path.append(os.path.abspath('../../../ITCHy/ITCHPy/build/lib.linux-x86_64-3.6/'))
 ```
-to match the actual build-path of the libraries.
+to match the actual build-path of the libraries. 
 
 ## API Reference
 The SCRACTHy API is separated into two categories: High- and Lowlevel functionality.
@@ -125,18 +125,45 @@ In the majority of cases, the Highlevel API should be sufficient to control the 
 ### Highlevel API
 
 #### GraphicalDisplay
+This class allows accessing the (optional) DisplayBreakout by providing convenience functions for displaying icons and text.
 
 ##### `bool detach()`
+Separates the GraphicalDisplay from the main thread, causing the `show` and `text` methods to be non-blocking.
+However, special attention has to be drawn when communication via I²C from a different thread simultaneously.
 
 ##### `bool isPressed(Button button)`
+Queries if a specific button is pressed *at the moment* of the call.
+`Button` may be one of the following values:
+- `Button::Back`
+- `Button::Up`
+- `Button::Down`
+- `Button::Select` (The rightmost button on the DisplayBreakout)
 
 ##### `void clear()`
+Clears the OLED Display causing all pixels to be set to black.
 
 ##### `void show(Icon icon, const std::string& header, const std::string& body)`
+Renders a default arrangement to the OLED-display consisting of a small 32x32px pictogram on the left, a header text in a slightly larger font and a body text with the default 6x6px font. In case the strings are too long to be displayed they will be truncated.
+
+The following pictograms can be selected:
+
+![None](libSCRATCHy/images/none.png) `Icon::None`, ![Scratchy](libSCRATCHy/images/scratchy.png) `Icon::Scratchy`, ![Spectrum](libSCRATCHy/images/spectrum.png) `Icon::Spectrum`, ![Forbidden](libSCRATCHy/images/forbidden.png) `Icon::Forbidden`
+
+![Bolt](libSCRATCHy/images/bolt.png) `Icon::Bolt`, ![Bug](libSCRATCHy/images/bug.png) `Icon::Bug`, ![Check](libSCRATCHy/images/check.png) `Icon::Check`, ![Clock](libSCRATCHy/images/clock.png) `Icon::Clock`
+
+![Cog](libSCRATCHy/images/cog.png) `Icon::Cog`, ![Fire](libSCRATCHy/images/fire.png) `Icon::Fire`, ![Image](libSCRATCHy/images/image.png) `Icon::Image`, ![Reboot](libSCRATCHy/images/reboot.png) `Icon::Reboot`
+
+![Power](libSCRATCHy/images/power.png) `Icon::Power`, ![Pulse](libSCRATCHy/images/pulse.png) `Icon::Pulse`, ![Random](libSCRATCHy/images/random.png) `Icon::Random`, ![Warning](libSCRATCHy/images/warning.png) `Icon::Warning`
+
+![Wrench](libSCRATCHy/images/wrench.png) `Icon::Wrench`, ![X](libSCRATCHy/images/x.png) `Icon::X`
+
+
 
 ##### `void show(Icon icon, const std::string& header, float body)`
+This is an overloaded method for quickly showing numerical values without the need for explicit string conversion.
 
 ##### `void text(const std::string& text)`
+Displays the specified text on the OLED-display. In case the string is too long to be displayed in one line (21 characters) it will be wrapped automatically.
 
 #### SignalManager
 

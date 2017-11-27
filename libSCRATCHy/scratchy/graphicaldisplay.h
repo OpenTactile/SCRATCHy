@@ -9,7 +9,7 @@ class ExternalEventLoop;
 enum Icon
 {
     None,
-    wlLogo,
+    Scratchy,
     Logo,
     Spectrum,
     Forbidden,
