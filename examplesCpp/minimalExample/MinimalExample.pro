@@ -2,7 +2,7 @@ QT += core
 
 CONFIG += c++11
 
-TARGET = Paper
+TARGET = MinimalExample
 CONFIG += console
 CONFIG -= app_bundle
 
