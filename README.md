@@ -166,28 +166,52 @@ This is an overloaded method for quickly showing numerical values without the ne
 Displays the specified text on the OLED-display. In case the string is too long to be displayed in one line (21 characters) it will be wrapped automatically.
 
 #### SignalManager
-
-##### `bool initializeBoards(unsigned int dacResolution, unsigned int samplingTime)`
-
-##### `std::vector<uint8_t> scanDevices()`
-
-##### `void reset(uint8_t address)`
-
-##### `void reset()`
-
-##### `void initSystem()`
-
-##### `void assignAddresses()`
-
-##### `void gatherSPISpeed()`
+The `SignalManager` is responsible for initializing the individual SignalBoards correctly. It automatically enumerates all connected SignalBoards, assigns the correct I²C addresses and gives access to individual boards. For debugging purposes, error messages and general information will be printed to `std::cerr`.
 
 ##### `void maskDevice(uint8_t address)`
+Excludes a specific I²C address from the enumeration process. This method can be called multiple times in order to mask more than one address. It can be used to permanently deactivate specific SignalBoards or in case additional I²C periphery has been added (e.g. the DisplayBreakout that will occupy the I²C address `0x3C`).
+
+##### `bool initializeBoards(unsigned int dacResolution, unsigned int samplingTime)`
+Resets all SignalBoards connected to the system and runs a "standard procedure" consisting of the following steps:
+
+1. (global Reset)
+2. Initialization of connected Signalboards
+3. Assignment of I²C addresses according to the selected hardware address
+4. Passing through the different runlevels of the SignalBoards and configuring the DAC resolution and sampling rate
+5. Initiating the "running" state on all SignalBoards
+
+The `samplingTime` is given in micro seconds and defaults to 62 µs resulting in a sampling rate of approximately 1/(62 µs) = 16 kHz.
+
+##### `std::vector<uint8_t> scanDevices()`
+Iterates over the whole (non masked) I²C address range and asks for an acknowledgment to the `SystemRequest::Alive` request. All properly initialized SignalBoards that respond to this request will be included in the returned list of I²C addresses.
 
 ##### `std::vector<SignalGenerator>& generators()`
+Returns a list of all SignalGenerators that have been successfully enumerated.
 
 ##### `std::vector<uint8_t> addresses() const`
+Returns a list of I²C addresses representing all active SignalBoards.
 
 ##### `SignalGenerator& generator(uint8_t address)`
+Returns the `SignalGenerator` instance that maps to the specified address.
+*Warning: Currently there are no checks if the address actually has been assigned.*
+
+---
+
+##### `void reset(uint8_t address)`
+Causes a specific SignalBoard to be resetted.
+*Warning: This method usually is called within the `initializeBoards` method. In most use cases, you probably do not want to call it manually.*
+
+##### `void reset()`
+Causes all (non masked) SignalBoard connected to the system to be resetted.
+*Warning: This method usually is called within the `initializeBoards` method. In most use cases, you probably do not want to call it manually.*
+
+##### `void initSystem()`
+Initializes all SignalBoards that have been resetted beforehand, causing them to enter *Runlevel 0*
+*Warning: This method usually is called within the `initializeBoards` method. In most use cases, you probably do not want to call it manually.*
+
+##### `void assignAddresses()`
+Iterates through all possible SignalGenerator addresses and assigns a new I²C address where applicable. Causes all `SignalGenerator` instances to be deleted an re-instanciated. Please make sure, the SignalGenerators have been resetted and initialized before this method is called.
+*Warning: This method usually is called within the `initializeBoards` method. In most use cases, you probably do not want to call it manually.*
 
 #### SignalGenerator
 
@@ -200,8 +224,6 @@ Displays the specified text on the OLED-display. In case the string is too long 
 ##### `bool isAlive()`
 
 ##### `void finishR0()`
-
-##### `bool spiCheck(uint16_t divider = 16) const`
 
 ##### `void finishR1()`
 
